@@ -12,12 +12,12 @@ MOD_LOG_URL = "https://www.metafilter.com/recent-mod-actions.cfm"
 HTML_BASEDIR = Path(__file__).parent / "blog" / "content" / "posts"
 
 HTML_TEMPLATE = """+++
-title = '{title}'
-date = '{timestamp}'
-tags = ['{site}', '{kind}', '{mod}']
+title = "{title}"
+date = "{timestamp}"
+tags = ["{site}", "{mod}", "{kind}"]
 
 [params]
-    url = '{url}'
+    url = "{url}"
 +++
 
 {text}
@@ -35,11 +35,19 @@ def fetch_mod_actions():
 
         mod = byline[1].text
         url = byline[3]["href"]
-        kind = "Deletion" if byline[0].strip().startswith("Deleted") else "Mod note"
         timestamp = dateparser.parse(f"{byline[2]} {byline[3].text}")
 
         site = re.search(r"^//(\w+)\.", url).group(1).lower()
         site = "mefi" if site == "www" else site
+
+        if byline[0].strip().startswith("Deleted"):
+            kind = "Deleted post"
+            post_title = action.find("a").text.strip().replace('"', '\\"')
+            title = f"Deleted {site} post '{post_title}'"
+        else:
+            kind = "Mod note"
+            post_title = byline[5].text.strip().replace('"', '\\"')
+            title = f"Mod note on '{post_title}'"
 
         text = action.decode_contents().strip()
 
@@ -47,11 +55,11 @@ def fetch_mod_actions():
         text = text.split('<div class="copy comment">')[0]
 
         post = HTML_TEMPLATE.format(
-            title=f"{kind} by {mod}",
+            title=title,
             timestamp=timestamp.isoformat(),
             site=site,
-            kind=kind,
             mod=mod,
+            kind=kind,
             url=url,
             text=text,
         )
