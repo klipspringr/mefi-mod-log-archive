@@ -40,14 +40,17 @@ def fetch_mod_actions():
         site = re.search(r"^//(\w+)\.", url).group(1).lower()
         site = "mefi" if site == "www" else site
 
-        if byline[0].strip().startswith("Deleted"):
+        byline_start = byline[0].strip().lower()
+        if byline_start.startswith("deleted"):
             kind = "Deleted post"
             post_title = action.find("a").text.strip().replace('"', '\\"')
             title = f"Deleted {site} post '{post_title}'"
-        else:
+        elif byline_start.startswith("mod comment"):
             kind = "Mod note"
             post_title = byline[5].text.strip().replace('"', '\\"')
             title = f"Mod note on '{post_title}'"
+        else:
+            raise ValueError(f'Unexpected action "{byline_start}"')
 
         text = action.decode_contents().strip()
 

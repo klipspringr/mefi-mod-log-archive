@@ -1,11 +1,12 @@
 /* Markdown */
 :root {
-  --maincolor: #185c8d;
-  --bordercl: #155484;
-  --hovercolor: #9fc65d;
+  --maincl: #185c8d;
+  --darkcl: #155484;
+  --hicl: #8dc3d7;
+  --bgcl: #b1d7e4;
 }
 html {
-  color: #232333;
+  color: #333;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
   font-size: 15px;
@@ -20,7 +21,7 @@ body {
 }
 
 ::selection {
-  background: var(--maincolor);
+  background: var(--maincl);
   color: #fff;
 }
 
@@ -28,96 +29,22 @@ p {
   line-height: 1.5;
 }
 
-hr {
-  border: 0;
-  border-top: 3px dotted var(--bordercl);
-  margin: 1em 0;
-}
-
-blockquote {
-  border-left: 3px solid var(--bordercl);
-  color: #737373;
-  margin: 0;
-  padding-left: 1em;
-}
-
 a {
-  border-bottom: 3px solid var(--maincolor);
-  color: inherit;
+  border-bottom: 3px solid var(--hicl);
+  color: var(--darkcl);
   text-decoration: none;
 }
 a:hover {
-  background-color: var(--hovercolor);
+  background-color: var(--darkcl);
   color: #fff;
 }
 
 ul {
   list-style: none;
-  padding-left: 2ch;
+  padding-left: 3ch;
 }
 ul li {
-  text-indent: -2ch;
-}
-ul > li::before {
-  content: "* ";
-  font-weight: bold;
-}
-
-/* Images */
-img {
-  border: 3px solid #ececec;
-  max-width: 100%;
-}
-
-figure {
-  box-sizing: border-box;
-  display: inline-block;
-  margin: 0;
-  max-width: 100%;
-}
-
-figure img {
-  max-height: 500px;
-}
-
-@media screen and (min-width: 600px) {
-  figure {
-    padding: 0 40px;
-  }
-}
-
-figure h4 {
-  font-size: 1rem;
-  margin: 0;
-  margin-bottom: 1em;
-}
-figure h4::before {
-  content: "↳ ";
-}
-
-/* Code blocks */
-code {
-  background-color: #f1f1f1;
-  padding: 0.1em 0.2em;
-}
-
-pre {
-  background-color: #ececec;
-  line-height: 1.4;
-  overflow-x: auto;
-  padding: 1em;
-}
-
-.highlight pre ::selection {
-  background: rgba(255, 255, 255, 0.2);
-  color: inherit;
-}
-
-pre code {
-  background-color: transparent;
-  color: inherit;
-  font-size: 100%;
-  padding: 0;
+  text-indent: -3ch;
 }
 
 /* Containers */
@@ -150,6 +77,10 @@ h5,
 h6 {
   font-size: 1.2rem;
   margin-top: 2em;
+  color: var(--darkcl);
+}
+header a {
+  font-weight: bold;
 }
 
 .meta {
@@ -171,23 +102,10 @@ h6 {
 /* Footer */
 footer {
   display: grid;
-  gap: 0.4rem;
-  border-top: 0.4rem dotted var(--bordercl);
+  gap: 0.5rem;
+  border-top: 0.4rem dotted var(--darkcl);
   padding: 1rem 0rem;
   margin-top: 2rem;
-}
-.soc {
-  display: flex;
-  align-items: center;
-  border-bottom: none;
-}
-.border {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  border: 1px solid;
-}
-.footer-info {
-  padding: var(--footer-padding);
 }
 
 /* Common */
@@ -208,62 +126,17 @@ article .title {
   display: flex;
   justify-content: space-between;
 }
-.tags li::before {
-  content: "🏷 ";
+ul.tags li::before {
+  content: "🏷️";
 }
-.tags a {
-  border-bottom: 3px solid var(--maincolor);
-}
-.tags a:hover {
-  color: white;
-  background-color: var(--hovercolor);
-}
-svg {
-  max-height: 15px;
-}
-.soc:hover {
-  color: white;
-}
-.draft-label {
-  color: var(--bordercl);
-  text-decoration: none;
-  padding: 2px 4px;
-  border-radius: 4px;
-  margin-left: 6px;
-  background-color: #f9f2f4;
-}
-
-/* table */
-table {
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
-table th {
-  padding: 6px 13px;
-  border: 1px solid #dfe2e5;
-  font-size: large;
-}
-
-table td {
-  padding: 6px 13px;
-  border: 1px solid #dfe2e5;
-}
-
-.feather {
-  width: 24px;
-  height: 24px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+ul.posts > li::before {
+  content: "🪧";
 }
 
 /* custom */
 div.postbyline {
-  background-color: #b1d7e4;
-  color: var(--bordercl);
+  background-color: var(--bgcl);
+  color: var(--darkcl);
   font-size: small;
   padding: 0.2rem 0.5rem;
   margin-top: 0.5rem;
@@ -271,12 +144,11 @@ div.postbyline {
 }
 
 div.postbyline > a {
+  border-bottom: 2px solid var(--darkcl);
   font-weight: bold;
-  border-bottom: 2px solid var(--maincolor);
 }
 
 h1 > a.permalink {
-  color: var(--maincolor);
   border: 0;
   font-size: smaller;
   padding: 2px 4px;

@@ -2,11 +2,14 @@
   {{ with .OutputFormats.Get "rss" -}}
   <div>📢 <a href="{{ .Permalink }}" class="xml">RSS for this page</a></div>
   {{ end }}
-  <div class="footer-info">
+  <div>
+    Data from <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
+    &middot; Updated every 10 minutes
+  </div>
+  <div>
     By <a href="https://www.metafilter.com/user/304523">Klipspringer</a>
     &middot; <a href="https://github.com/klipspringr/mefi-mod-log-archive">GitHub</a>
-    &middot; Data from <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
-    &middot; Updated every 10 minutes
+    &middot; Not an official MetaFilter product
     &middot; Theme based on <a href="https://github.com/athul/archie">Archie</a>
   </div>
 </footer>
