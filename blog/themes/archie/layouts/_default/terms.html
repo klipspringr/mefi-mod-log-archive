@@ -1,5 +1,5 @@
 {{ define "main" }}
-<h1 class="page-title">All tags</h1>
+<h1 class="page-title">All tags &middot; {{ len .Data.Terms }}</h1>
 
 {{ $data := .Data }}
 <div class="tag-cloud">

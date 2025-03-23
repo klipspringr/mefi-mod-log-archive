@@ -53,9 +53,8 @@ def fetch_mod_actions():
             raise ValueError(f'Unexpected action "{byline_start}"')
 
         text = action.decode_contents().strip()
-
-        # workaround for unclosed tags
-        text = text.split('<div class="copy comment">')[0]
+        text = text.split('<div class="copy comment">')[0]  # workaround unclosed tags
+        text = re.sub("\s+", " ", text)  # merge whitespace
 
         post = HTML_TEMPLATE.format(
             title=title,
