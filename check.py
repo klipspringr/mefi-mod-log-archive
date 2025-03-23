@@ -28,7 +28,6 @@ hash = "{hash}"
 
 def fetch_mod_actions():
     html = urlopen(MOD_LOG_URL).read()
-    # html = open("temp.html").readlines()
 
     soup = bs4.BeautifulSoup(html, "lxml")
 
@@ -37,7 +36,13 @@ def fetch_mod_actions():
 
         mod = byline[1].text
         url = byline[3]["href"]
-        timestamp = dateparser.parse(f"{byline[2]} {byline[3].text}")
+        timestamp = dateparser.parse(
+            f"{byline[2]} {byline[3].text}",
+            settings={
+                "TIMEZONE": "America/Los_Angeles",
+                "RETURN_AS_TIMEZONE_AWARE": True,
+            },
+        )
 
         hash = hashlib.md5(str(url).encode()).hexdigest()
 
