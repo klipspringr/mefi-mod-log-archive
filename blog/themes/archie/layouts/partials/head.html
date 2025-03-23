@@ -7,6 +7,5 @@
 		{{ range .Site.Menus.main }}
 		<a href="{{ .URL }}">{{ .Name }}</a>
 		{{ end }}
-		{{ with .OutputFormats.Get "rss" }}<a href="{{ .Permalink }}" class="xml">XML</a>{{ end }}
 	</nav>
 </header>
