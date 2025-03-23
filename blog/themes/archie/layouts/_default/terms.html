@@ -2,15 +2,12 @@
 <h1 class="page-title">All tags &middot; {{ len .Data.Terms }}</h1>
 
 {{ $data := .Data }}
-<div class="tag-cloud">
-	<ul class="tags">
-		{{ range $key, $value := .Data.Terms.ByCount }}
-		<li>
-			<a href="{{ $.Site.LanguagePrefix | absURL }}{{ $data.Plural }}/{{ $value.Name | urlize }}/">{{ $value.Name
-				}}</a>
-			&middot; {{ $value.Count }}
-		</li>
-		{{ end }}
-	</ul>
-</div>
+<ul class="tags">
+	{{ range $key, $value := .Data.Terms.ByCount }}
+	<li>
+		<a href="{{ $value.Name | urlize }}/">{{ $value.Name }}</a>
+		&middot; {{ $value.Count }}
+	</li>
+	{{ end }}
+</ul>
 {{ end }}
