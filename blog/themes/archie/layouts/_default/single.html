@@ -13,19 +13,19 @@
         <section class="body">
           {{ .Content }}
         </section>
-        <div class="post-tags">
-          {{ if ne .Type "page" }}
-          {{ if gt .Params.tags 0 }}
-          <nav class="nav tags">
-            <ul class="tags">
-              {{ range .Params.tags }}
-              <li><a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a></li>
-              {{ end }}
-            </ul>
-          </nav>
+        {{ if ne .Type "page" }}
+        {{ if gt .Params.tags 0 }}
+        <p>
+          {{ range .Params.tags }}
+          🏷️ <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>
           {{ end }}
-          {{ end }}
-        </div>
+        </p>
+        <p>
+          <a href="https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/{{ .Params.site }}-{{ .Params.hash }}.html?author=mefi-activity-automated"
+            title="Edit history">🕙 Edit history</a>
+        </p>
+        {{ end }}
+        {{ end }}
       </div>
     </div>
   </article>

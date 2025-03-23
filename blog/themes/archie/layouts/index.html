@@ -13,7 +13,9 @@
 			<section class="list-item">
 				<h1 class="title">
 					<a href="{{ .Params.URL }}">{{.Title}}</a>
-					<a href="{{ .RelPermalink }}" class="permalink" title="Permalink">#</a>
+					<a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
+					<a href="https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/{{ .Params.site }}-{{ .Params.hash }}.html?author=mefi-activity-automated"
+						class="tool" title="Edit history">🕙</a>
 				</h1>
 				{{ template "partials/pagedescription.html" . }}
 			</section>

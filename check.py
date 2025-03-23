@@ -17,7 +17,9 @@ date = "{timestamp}"
 tags = ["{site}", "{mod}", "{kind}"]
 
 [params]
-    url = "{url}"
+url = "{url}"
+site = "{site}"
+hash = "{hash}"
 +++
 
 {text}
@@ -37,6 +39,8 @@ def fetch_mod_actions():
         url = byline[3]["href"]
         timestamp = dateparser.parse(f"{byline[2]} {byline[3].text}")
 
+        hash = hashlib.md5(str(url).encode()).hexdigest()
+
         site = re.search(r"^//(\w+)\.", url).group(1).lower()
         site = "mefi" if site == "www" else site
 
@@ -54,7 +58,6 @@ def fetch_mod_actions():
 
         text = action.decode_contents().strip()
         text = text.split('<div class="copy comment">')[0]  # workaround unclosed tags
-        text = re.sub("\s+", " ", text)  # merge whitespace
 
         post = HTML_TEMPLATE.format(
             title=title,
@@ -62,13 +65,12 @@ def fetch_mod_actions():
             site=site,
             mod=mod,
             kind=kind,
+            hash=hash,
             url=url,
             text=text,
         )
 
-        hash = hashlib.md5(str(url).encode()).hexdigest()
         path = HTML_BASEDIR / f"{site}-{hash}.html"
-
         with open(path, "w") as f:
             f.write(post)
 
