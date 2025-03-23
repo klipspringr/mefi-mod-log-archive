@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+{{ partial "header.html" . }}
+
+<body>
+	<div class="content">
+		{{ partial "head.html" . }}
+
+		<main class="list">
+			{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+			{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
+			{{ range $paginator.Pages }}
+			<section class="list-item">
+				<h1 class="title">
+					<a href="{{ .Params.URL }}">{{.Title}}</a>
+					<a href="{{ .RelPermalink }}" class="permalink" title="Permalink">#</a>
+				</h1>
+				{{ template "partials/pagedescription.html" . }}
+			</section>
+			{{ end }}
+			{{ template "partials/paginator.html" . }}
+		</main>
+		{{ partial "footer.html" . }}
+	</div>
+
+</body>
+
+</html>

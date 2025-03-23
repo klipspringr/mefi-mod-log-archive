@@ -1,0 +1,20 @@
+baseURL = 'https://klipspringr.github.io/mefi-mod-log-archive/'
+languageCode = 'en-gb'
+title = 'Mefi mod log archive'
+theme = 'archie'
+
+[pagination]
+pagerSize = 50
+
+[taxonomies]
+tag = 'tags'
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+[[menu.main]]
+name = "Tags"
+url = "/tags"
+weight = 2
