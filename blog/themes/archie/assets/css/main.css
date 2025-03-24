@@ -112,10 +112,6 @@ footer a {
 }
 
 /* Common */
-.title h1 {
-  margin-bottom: 0;
-}
-
 time {
   color: grey;
 }
@@ -125,19 +121,23 @@ article .title {
   margin-bottom: 1em;
 }
 
-.site-description {
-  display: flex;
-  justify-content: space-between;
-}
-
 ul.tags > li::before {
   content: "🏷️ ";
+}
+ul.categories > li::before {
+  content: "🗓️ ";
 }
 ul.posts > li::before {
   content: "🪧 ";
 }
 
 /* custom */
+h1.list-title {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5em;
+}
+
 div.postbyline {
   background-color: var(--bgcl);
   color: var(--darkcl);
@@ -150,10 +150,4 @@ div.postbyline {
 div.postbyline > a {
   border-bottom: 2px solid var(--darkcl);
   font-weight: bold;
-}
-
-h1 > a.tool {
-  border: 0;
-  font-size: smaller;
-  padding: 4px 1px;
 }

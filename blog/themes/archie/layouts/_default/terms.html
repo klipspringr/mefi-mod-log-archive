@@ -1,8 +1,8 @@
 {{ define "main" }}
-<h1 class="page-title">All tags &middot; {{ len .Data.Terms }}</h1>
+<h1 class="page-title">All {{ .Type }} &middot; {{ len .Data.Terms }}</h1>
 
 {{ $data := .Data }}
-<ul class="tags">
+<ul class="{{ .Type }}">
 	{{ range $key, $value := .Data.Terms.ByCount }}
 	<li>
 		<a href="{{ $value.Name | urlize }}/">{{ $value.Name }}</a>

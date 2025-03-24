@@ -10,12 +10,16 @@
 			{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
 			{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
 			{{ range $paginator.Pages }}
-			<section class="list-item">
-				<h1 class="title">
-					<a href="{{ .Params.URL }}">{{.Title}}</a>
-					<a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
-					<a href="https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/{{ .Params.site }}-{{ .Params.hash }}.html?author=mefi-activity-automated"
-						class="tool" target="_blank" title="Edit history">🕙</a>
+			<section>
+				<h1 class="list-title">
+					<div>
+						<a href="{{ .Params.URL }}">{{.Title}}</a>
+					</div>
+					<div>
+						<a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
+						<a href="{{ template `partials/historylink.html` . }}" class="tool" target="_blank"
+							title="Edit history">🕙</a>
+					</div>
 				</h1>
 				{{ template "partials/pagedescription.html" . }}
 			</section>

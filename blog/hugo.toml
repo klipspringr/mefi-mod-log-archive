@@ -4,10 +4,11 @@ title = 'Mefi mod log archive'
 theme = 'archie'
 
 [pagination]
-pagerSize = 50
+pagerSize = 250
 
 [taxonomies]
 tag = 'tags'
+category = 'categories'
 
 [[menu.main]]
 name = "Home"
@@ -18,3 +19,8 @@ weight = 1
 name = "Tags"
 url = "/tags"
 weight = 2
+
+[[menu.main]]
+name = "Archives"
+url = "/categories"
+weight = 3

@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ if isset .Data "Term" }}
-<h1>Items tagged "{{ .Data.Term }}" &middot {{ len .Data.Pages }}</h1>
+<h1>Entries in "{{ .Data.Term }}" &middot {{ len .Data.Pages }}</h1>
 {{ else }}
 <h1 class="page-title">All items</h1>
 {{ end }}

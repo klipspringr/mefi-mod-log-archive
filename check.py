@@ -14,7 +14,8 @@ HTML_BASEDIR = Path(__file__).parent / "blog" / "content" / "posts"
 HTML_TEMPLATE = """+++
 title = "{title}"
 date = "{timestamp}"
-tags = ["{site}", "{mod}", "{kind}"]
+tags = ["{kind}", "{site}", "{mod}"]
+categories = ["{year}", "{month}"]
 
 [params]
 url = "{url}"
@@ -27,11 +28,16 @@ hash = "{hash}"
 
 
 def fetch_mod_actions():
+    HTML_BASEDIR.mkdir(exist_ok=True)
+
     html = urlopen(MOD_LOG_URL).read()
 
     soup = bs4.BeautifulSoup(html, "lxml")
 
-    for action in soup.find_all("div", {"class": "copy comment"}):
+    actions = soup.find_all("div", {"class": "copy comment"})
+    print(f"Found {len(actions)} mod actions")
+
+    for action in actions:
         byline = action.find("div", {"class": "postbyline"}).contents
 
         mod = byline[1].text
@@ -39,7 +45,7 @@ def fetch_mod_actions():
         timestamp = dateparser.parse(
             f"{byline[2]} {byline[3].text}",
             settings={
-                "TIMEZONE": "America/Los_Angeles",
+                "TIMEZONE": "America/Los_Angeles",  # mefi server is Pacific Time
                 "RETURN_AS_TIMEZONE_AWARE": True,
             },
         )
@@ -61,12 +67,14 @@ def fetch_mod_actions():
         else:
             raise ValueError(f'Unexpected action "{byline_start}"')
 
-        text = action.decode_contents().strip()
-        text = text.split('<div class="copy comment">')[0]  # workaround unclosed tags
+        # split() to work around unclosed tags
+        text = action.decode_contents().strip().split('<div class="copy comment">')[0]
 
         post = HTML_TEMPLATE.format(
             title=title,
             timestamp=timestamp.isoformat(),
+            year=timestamp.year,
+            month=timestamp.strftime("%Y %B"),
             site=site,
             mod=mod,
             kind=kind,

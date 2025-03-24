@@ -20,12 +20,18 @@
           🏷️ <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>
           {{ end }}
         </p>
+        {{ end }}
+        {{ if gt .Params.categories 0 }}
         <p>
-          🕙 <a
-            href="https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/{{ .Params.site }}-{{ .Params.hash }}.html?author=mefi-activity-automated"
-            target="_blank" title="Edit history">Edit history</a>
+          {{ range .Params.categories }}
+          🗓️ <a href="{{ $.Site.LanguagePrefix | absURL }}/categories/{{ . | urlize }}/">{{ . }}</a>
+          {{ end }}
         </p>
         {{ end }}
+        <p>
+          🕙 <a href="{{ template `partials/historylink.html` . }}" target="_blank" title="Edit history">Edit
+            history</a>
+        </p>
         {{ end }}
       </div>
     </div>
