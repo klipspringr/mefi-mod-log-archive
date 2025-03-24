@@ -1,40 +1,33 @@
 {{ define "main" }}
-<main>
-  <article>
-    <div class="post-container">
-      <!-- Main Content -->
-      <div class="post-content">
-        <div class="title">
-          <h1 class="title">{{ .Title }}</h1>
-          <div class="meta" title="MetaFilter server time (Pacific)">
-            {{ dateFormat ":date_full" .Date }} at {{ dateFormat ":time_short" .Date }} Server Time
-          </div>
-        </div>
-        <section class="body">
-          {{ .Content }}
-        </section>
-        {{ if ne .Type "page" }}
-        {{ if gt .Params.tags 0 }}
-        <p>
-          {{ range .Params.tags }}
-          🏷️ <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>
-          {{ end }}
-        </p>
-        {{ end }}
-        {{ if gt .Params.categories 0 }}
-        <p>
-          {{ range .Params.categories }}
-          🗓️ <a href="{{ $.Site.LanguagePrefix | absURL }}/categories/{{ . | urlize }}/">{{ . }}</a>
-          {{ end }}
-        </p>
-        {{ end }}
-        <p>
-          🕙 <a href="{{ template `partials/historylink.html` . }}" target="_blank" title="Edit history">Edit
-            history</a>
-        </p>
-        {{ end }}
-      </div>
-    </div>
-  </article>
-</main>
+<article>
+  <div>
+    <h1><a href="{{ .Params.url }}">{{ .Title }}</a></h1>
+    <time>
+      {{ dateFormat ":date_full" .Date }} at {{ dateFormat ":time_short" .Date }} Server Time
+    </time>
+  </div>
+  <div>
+    {{ .Content }}
+  </div>
+  {{ if ne .Type "page" }}
+  {{ if gt .Params.tags 0 }}
+  <div>
+    {{ range .Params.tags }}
+    🏷️ <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>
+    {{ end }}
+  </div>
+  {{ end }}
+  {{ if gt .Params.categories 0 }}
+  <div>
+    {{ range .Params.categories }}
+    🗓️ <a href="{{ $.Site.LanguagePrefix | absURL }}/categories/{{ . | urlize }}/">{{ . }}</a>
+    {{ end }}
+  </div>
+  {{ end }}
+  <div>
+    🕙 <a href="{{ template `partials/historylink.html` . }}" target="_blank" title="Edit history">Edit
+      history</a>
+  </div>
+</article>
+{{ end }}
 {{ end }}

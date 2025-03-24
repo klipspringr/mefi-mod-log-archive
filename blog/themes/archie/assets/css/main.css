@@ -4,17 +4,20 @@
   --hicl: #8dc3d7;
   --bgcl: #b1d7e4;
 }
+
 html {
   color: #333;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6em;
 }
+
 body {
   display: block;
   margin: 8px;
 }
+
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -33,6 +36,7 @@ a {
   color: var(--darkcl);
   text-decoration: none;
 }
+
 a:hover {
   background-color: var(--darkcl);
   color: #fff;
@@ -55,6 +59,9 @@ ul li {
   padding: 0 1ch;
   word-wrap: break-word;
 }
+.index > section {
+  margin: 2em 0;
+}
 
 /* Header */
 header {
@@ -68,6 +75,7 @@ header {
 header .main {
   font-size: 1.5rem;
 }
+
 h1,
 h2,
 h3,
@@ -75,27 +83,12 @@ h4,
 h5,
 h6 {
   font-size: 1.2rem;
-  margin-top: 2em;
+  margin: 0;
   color: var(--darkcl);
 }
+
 header a {
   font-weight: bold;
-}
-
-.meta {
-  color: #999;
-  letter-spacing: -0.5px;
-}
-
-.post-container {
-  align-items: flex-start;
-  display: flex;
-  gap: 20px;
-}
-
-.post-content {
-  flex: 3;
-  min-width: 0;
 }
 
 /* Footer */
@@ -117,8 +110,10 @@ time {
 }
 
 /* Posts */
-article .title {
-  margin-bottom: 1em;
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 ul.tags > li::before {
@@ -131,10 +126,11 @@ ul.posts > li::before {
   content: "🪧 ";
 }
 
-/* custom */
+/* Custom */
 h1.list-title {
   display: grid;
   grid-template-columns: 1fr auto;
+  margin-bottom: 0.5em;
   gap: 0.5em;
 }
 

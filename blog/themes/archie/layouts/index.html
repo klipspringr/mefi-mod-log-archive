@@ -3,32 +3,29 @@
 {{ partial "header.html" . }}
 
 <body>
-	<div class="content">
+	<div class="content index">
 		{{ partial "head.html" . }}
 
-		<main class="list">
-			{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-			{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
-			{{ range $paginator.Pages }}
-			<section>
-				<h1 class="list-title">
-					<div>
-						<a href="{{ .Params.URL }}">{{.Title}}</a>
-					</div>
-					<div>
-						<a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
-						<a href="{{ template `partials/historylink.html` . }}" class="tool" target="_blank"
-							title="Edit history">🕙</a>
-					</div>
-				</h1>
-				{{ template "partials/pagedescription.html" . }}
-			</section>
-			{{ end }}
-			{{ template "partials/paginator.html" . }}
-		</main>
+		{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+		{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
+		{{ range $paginator.Pages }}
+		<section>
+			<h1 class="list-title">
+				<div>
+					<a href="{{ .Params.URL }}">{{.Title}}</a>
+				</div>
+				<div>
+					<a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
+					<a href="{{ template `partials/historylink.html` . }}" class="tool" target="_blank"
+						title="Edit history">🕙</a>
+				</div>
+			</h1>
+			{{ template "partials/pagedescription.html" . }}
+		</section>
+		{{ end }}
+		{{ template "partials/paginator.html" . }}
 		{{ partial "footer.html" . }}
 	</div>
-
 </body>
 
 </html>
