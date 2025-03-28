@@ -1,6 +1,7 @@
 import hashlib
 from pathlib import Path
 import re
+from urllib.error import ContentTooShortError, HTTPError, URLError
 from urllib.request import urlopen
 
 import bs4
@@ -30,7 +31,14 @@ hash = "{hash}"
 def fetch_mod_actions():
     HTML_BASEDIR.mkdir(exist_ok=True)
 
-    html = urlopen(MOD_LOG_URL).read()
+    try:
+        html = urlopen(MOD_LOG_URL).read()
+    except (HTTPError, ContentTooShortError):
+        raise
+    except URLError as x:
+        print("Encountered URLError, failing silently.")
+        print(x)
+        return
 
     soup = bs4.BeautifulSoup(html, "lxml")
 
