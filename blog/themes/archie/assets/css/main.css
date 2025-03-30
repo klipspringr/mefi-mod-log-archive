@@ -91,16 +91,23 @@ header a {
   font-weight: bold;
 }
 
-/* Footer */
 footer {
-  display: grid;
-  gap: 0.5rem;
   border-top: 0.4rem dotted var(--darkcl);
   padding: 1rem 0rem;
   margin-top: 2rem;
 }
 
-footer a {
+/* About */
+div.about {
+  background-color: #eee;
+  padding: 0.5em 1em;
+}
+div.about p {
+  line-height: 1.5em;
+  margin: 0.5em 0 0.5em 0;
+}
+footer a,
+div.about a {
   font-weight: bold;
 }
 
@@ -146,4 +153,23 @@ div.postbyline {
 div.postbyline > a {
   border-bottom: 2px solid var(--darkcl);
   font-weight: bold;
+}
+
+div.pagination {
+  background-color: var(--darkcl);
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+div.pagination > a,
+div.pagination > span.inactive {
+  font-weight: bold;
+  font-size: larger;
+}
+div.pagination > a {
+  color: #fff;
+}
+div.pagination > span.inactive {
+  color: var(--hicl);
 }

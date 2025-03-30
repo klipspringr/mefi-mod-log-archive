@@ -5,6 +5,9 @@
 <body>
 	<div class="content index">
 		{{ partial "head.html" . }}
+		<div class="header-about">
+			{{ partial "about.html" . }}
+		</div>
 
 		{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
 		{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}

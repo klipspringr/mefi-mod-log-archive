@@ -1,17 +1,9 @@
 <footer id="footer">
-  {{ with .OutputFormats.Get "rss" -}}
-  <div>📢 <a href="{{ .Permalink }}" class="xml">RSS for this page</a></div>
-  {{ end }}
-  <div>
-    Data from <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
-    &middot; Checked every 10-20 minutes
-  </div>
-  <div>
-    By <a href="https://www.metafilter.com/user/304523">Klipspringer</a>
-    &middot; <a href="https://github.com/klipspringr/mefi-mod-log-archive">GitHub</a>
-    &middot; Not an official MetaFilter product
-    &middot; Theme based on <a href="https://github.com/athul/archie">Archie</a>
-  </div>
+  {{ partial "about.html" . }}
+  <p>
+    We check for new mod actions every 10 minutes. Checks may be delayed by up to an hour at busy times.
+  </p>
+  <p><a href="https://gohugo.io/">Hugo</a> theme based on <a href="https://github.com/athul/archie">Archie</a>.</p>
 </footer>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js'

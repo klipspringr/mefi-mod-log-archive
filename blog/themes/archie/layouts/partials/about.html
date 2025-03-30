@@ -1,0 +1,16 @@
+<div class="about">
+    <p>
+        This is an archive of the
+        <a href="https://www.metafilter.com/">MetaFilter</a>
+        <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
+        log.
+    </p>
+    <p>
+        {{ with .OutputFormats.Get "rss" -}}
+        📢 <a href="{{ .Permalink }}" class="xml">RSS for this page</a> &middot;
+        {{ end }}
+        By <a href="https://www.metafilter.com/user/304523">Klipspringer</a>
+        &middot; <a href="https://github.com/klipspringr/mefi-mod-log-archive">Source code</a>
+        &middot; Not an official MetaFilter product.
+    </p>
+</div>
