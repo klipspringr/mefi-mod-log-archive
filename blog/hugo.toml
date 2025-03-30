@@ -4,7 +4,7 @@ title = 'Mefi mod log archive'
 theme = 'archie'
 
 [pagination]
-pagerSize = 250
+pagerSize = 100
 
 [taxonomies]
 tag = 'tags'
