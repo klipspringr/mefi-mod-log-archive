@@ -1,12 +1,11 @@
 import hashlib
-from pathlib import Path
 import re
-from urllib.error import ContentTooShortError, HTTPError, URLError
+from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 import bs4
 import dateparser
-
 
 MOD_LOG_URL = "https://www.metafilter.com/recent-mod-actions.cfm"
 
@@ -33,10 +32,10 @@ def fetch_mod_actions():
 
     try:
         html = urlopen(MOD_LOG_URL).read()
-    except (HTTPError, ContentTooShortError):
+    except HTTPError:
         raise
-    except URLError as x:
-        print("Encountered URLError, failing silently.")
+    except (URLError, ConnectionError) as x:
+        print("Failing silently on connection error")
         print(x)
         return
 
