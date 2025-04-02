@@ -1,7 +1,7 @@
 baseURL = 'https://klipspringr.github.io/mefi-mod-log-archive/'
 languageCode = 'en-gb'
-title = 'Mefi mod log archive'
-theme = 'archie'
+title = 'MeFi mod log archive'
+theme = 'mefi-mod-log'
 
 [pagination]
 pagerSize = 100
