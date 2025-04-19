@@ -1,0 +1,26 @@
+{{ define "main" }}
+<article>
+    <div>
+        <h1><a href="{{ .Params.url }}">{{ .Title }}</a></h1>
+        <time>
+            {{ dateFormat ":date_full" .Date }} at {{ dateFormat ":time_short" .Date }} Server Time
+        </time>
+    </div>
+    <div>
+        {{ .Content }}
+    </div>
+    {{ if ne .Type "page" }}
+    {{ if gt .Params.tags 0 }}
+    <div>
+        {{ range .Params.tags }}
+        🏷️ <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>
+        {{ end }}
+    </div>
+    {{ end }}
+    <div>
+        🕙 <a href="{{ template `partials/historylink.html` . }}" target="_blank" title="Edit history">Edit
+            history</a>
+    </div>
+</article>
+{{ end }}
+{{ end }}

@@ -1,0 +1,13 @@
+{{ define "main" }}
+<h1 class="page-title">All {{ .Type }}</h1>
+
+{{ $data := .Data }}
+<ul>
+    {{ range $key, $value := .Data.Terms.ByCount }}
+    <li>
+        🏷️ <a href="{{ $value.Name | urlize }}/">{{ $value.Name }}</a>
+        &middot; {{ $value.Count }}
+    </li>
+    {{ end }}
+</ul>
+{{ end }}

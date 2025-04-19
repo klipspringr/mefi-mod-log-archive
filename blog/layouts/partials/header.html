@@ -1,0 +1,19 @@
+<header>
+    <div>
+        <a href="{{ .Site.BaseURL }}" class="home">{{ .Site.Title }}</a>
+        <div class="sub">
+            An archive of MetaFilter's
+            <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
+            log
+        </div>
+    </div>
+    <nav>
+        <a href="{{ .Site.BaseURL }}">🏠 Home</a>
+        <a href="{{ .Site.BaseURL }}/tags">🏷️ Tags</a>
+        {{ if not (eq .Section "archive") }}
+        {{ with .OutputFormats.Get "rss" -}}
+        <a href="{{ .Permalink }}">📢 RSS</a>
+        {{ end -}}
+        {{ end }}
+    </nav>
+</header>

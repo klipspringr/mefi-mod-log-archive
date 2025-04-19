@@ -1,0 +1,11 @@
+<li>
+    <a href="{{ .RelPermalink }}">{{.Title}}</a>
+    <div class="meta">{{ dateFormat ":date_full" .Date }}
+        {{ if gt .Params.tags 0 }}
+        &middot;
+        {{ range .Params.tags }}
+        🏷️ <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>
+        {{ end }}
+        {{ end }}
+    </div>
+</li>

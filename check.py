@@ -15,7 +15,6 @@ HTML_TEMPLATE = """+++
 title = "{title}"
 date = "{timestamp}"
 tags = ["{kind}", "{site}", "{mod}"]
-categories = ["{year}", "{month}"]
 
 [params]
 url = "{url}"
@@ -55,7 +54,7 @@ def fetch_mod_actions():
                 "TIMEZONE": "America/Los_Angeles",  # mefi server is Pacific Time
                 "RETURN_AS_TIMEZONE_AWARE": True,
             },
-        )
+        ).isoformat()
 
         hash = hashlib.md5(str(url).encode()).hexdigest()
 
@@ -79,9 +78,7 @@ def fetch_mod_actions():
 
         post = HTML_TEMPLATE.format(
             title=title,
-            timestamp=timestamp.isoformat(),
-            year=timestamp.year,
-            month=timestamp.strftime("%Y %B"),
+            timestamp=timestamp,
             site=site,
             mod=mod,
             kind=kind,

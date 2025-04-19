@@ -1,0 +1,23 @@
+{{ define "main" }}
+
+{{- $cfg := site.Params.modules.archive }}
+{{- $p := slice }}
+{{- $section := strings.Trim (site.Params.modules.archive.section) "/" }}
+{{- range where site.RegularPages "Section" $section }}
+{{- if eq ($.Date.Format "2006-01") (.PublishDate.Format "2006-01") }}
+{{- $p = $p | append . }}
+{{- end }}
+{{- end }}
+
+{{ partial "archive/widget.html" }}
+
+<h1>{{ .Title }} &middot; {{ len $p }}</h1>
+
+<ul class="posts">
+    {{- range $p }}
+    {{ partial "item.html" . }}
+    {{- end -}}
+</ul>
+
+{{ partial "archive/widget.html" }}
+{{ end }}

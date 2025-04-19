@@ -1,0 +1,177 @@
+:root {
+  --maincl: #185c8d;
+  --darkcl: #155484;
+  --hicl: #8dc3d7;
+  --bgcl: #b1d7e4;
+}
+
+html {
+  color: #333;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6em;
+}
+
+body {
+  margin: 8px;
+}
+
+::selection {
+  background: var(--maincl);
+  color: #fff;
+}
+
+p {
+  line-height: 1.6em;
+  margin: 0.5em 0 1em 0;
+}
+
+a {
+  border-bottom: 3px solid var(--hicl);
+  color: var(--darkcl);
+  text-decoration: none;
+}
+
+a:hover {
+  background-color: var(--darkcl);
+  color: #fff;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 1.2em;
+  margin: 0;
+  color: var(--darkcl);
+}
+
+/* Containers */
+.content {
+  margin-bottom: 4em;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  padding: 0 0.4em;
+  word-wrap: break-word;
+}
+section {
+  margin: 2em 0;
+}
+
+/* Header */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 1em 0;
+}
+
+header a.home {
+  font-size: 1.5em;
+}
+
+div.sub {
+  font-size: 14px;
+  color: #999;
+  margin: 0.4em 0 1em 0;
+}
+
+header nav a {
+  background-color: var(--bgcl);
+  padding: 0.5em;
+}
+
+/* Footer */
+footer {
+  border-top: 0.4em dotted var(--darkcl);
+  padding: 1em 0;
+  margin-top: 2em;
+}
+
+/* Archive widget */
+table.archive-widget {
+  background-color: var(--darkcl);
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  width: 100%;
+  color: var(--hicl);
+  font-size: 0.8em;
+}
+
+table.archive-widget a {
+  color: #fff;
+}
+
+/* Common */
+time {
+  color: #666;
+}
+
+header a,
+footer a,
+table.archive-widget a {
+  font-weight: bold;
+}
+
+/* Posts */
+h1.post-title {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 0.5em;
+  gap: 0.5em;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+ul.posts > li {
+  margin-bottom: 1.5em;
+  padding-left: 0;
+}
+
+ul.posts > li > div.meta {
+  font-size: smaller;
+  line-height: 1.5em;
+  padding: 0.4em 0;
+  color: #999;
+}
+
+div.pagination {
+  background-color: var(--darkcl);
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: larger;
+  color: var(--hicl);
+}
+div.pagination > a {
+  color: #fff;
+}
+
+/* Mefi HTML */
+div.postbyline {
+  background-color: var(--bgcl);
+  color: var(--darkcl);
+  font-size: small;
+  padding: 0.2em 0.5em;
+  margin-top: 0.5em;
+  line-height: 1.5em;
+}
+
+div.postbyline > a {
+  border-bottom: 2px solid var(--darkcl);
+  font-weight: bold;
+}

@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"] # deploy from main
-    paths: ["blog/**"]
+    paths: ["blog/**"] # ignore pushes that don't touch blog/
 
   workflow_dispatch:
 
@@ -39,10 +39,9 @@ jobs:
       - name: Build with Hugo
         working-directory: ./blog
         run: |
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+          mkdir -p assets/data
+          hugo list published > assets/data/published-content.csv
+          hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
