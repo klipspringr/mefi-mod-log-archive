@@ -1,6 +1,6 @@
 <header>
     <div>
-        <a href="{{ .Site.BaseURL }}" class="home">{{ .Site.Title }}</a>
+        <a href="{{ relURL "" }}" class="home">{{ .Site.Title }}</a>
         <div class="sub">
             An archive of MetaFilter's
             <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
@@ -8,8 +8,8 @@
         </div>
     </div>
     <nav>
-        <a href="{{ .Site.BaseURL }}">🏠 Home</a>
-        <a href="{{ .Site.BaseURL }}/tags">🏷️ Tags</a>
+        <a href="{{ relURL "" }}">🏠 Home</a>
+        <a href="{{ relURL "tags" }}">🏷️ Tags</a>
         {{ if not (eq .Section "archive") }}
         {{ with .OutputFormats.Get "rss" -}}
         <a href="{{ .Permalink }}">📢 RSS</a>
