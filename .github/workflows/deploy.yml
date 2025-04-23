@@ -23,7 +23,6 @@ jobs:
     env:
       HUGO_VERSION: 0.146.7
       HUGO_ENVIRONMENT: production
-      HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
     steps:
       - name: Install Hugo CLI
         run: |
@@ -41,19 +40,17 @@ jobs:
         id: cache-restore
         uses: actions/cache/restore@v4
         with:
-          path: ${{ env.HUGO_CACHEDIR }}
+          path: ${{ runner.temp }}/hugo_cache
           key: hugo-${{ github.run_id }}
           restore-keys: hugo-
 
-      - name: Hugo list published content
+      - name: Hugo build
         working-directory: ./blog
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
         run: |
           mkdir -p assets/data
           hugo list published > assets/data/published-content.csv
-
-      - name: Hugo build
-        working-directory: ./blog
-        run: |
           hugo \
             --gc \
             --minify \
@@ -62,7 +59,7 @@ jobs:
       - name: Hugo cache save
         uses: actions/cache/save@v4
         with:
-          path: ${{ env.HUGO_CACHEDIR }}
+          path: ${{ runner.temp }}/hugo_cache
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Upload artifact
