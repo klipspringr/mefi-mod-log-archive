@@ -4,7 +4,7 @@
         {
             "label": "Hugo",
             "type": "shell",
-            "command": "mkdir -p assets/data && hugo list published > assets/data/published-content.csv && hugo server --gc --bind=0.0.0.0",
+            "command": "mkdir -p assets/data && hugo mod verify && hugo list published > assets/data/published-content.csv && hugo server --gc --bind=0.0.0.0",
             "problemMatcher": [],
             "options": {
                 "cwd": "${workspaceFolder}/blog",
