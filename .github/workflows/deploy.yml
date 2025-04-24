@@ -36,18 +36,8 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
-      - name: Hugo cache restore
-        id: cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ runner.temp }}/hugo_cache
-          key: hugo-${{ github.run_id }}
-          restore-keys: hugo-
-
       - name: Hugo build
         working-directory: ./blog
-        env:
-          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
         run: |
           mkdir -p assets/data
           hugo mod verify
@@ -56,12 +46,6 @@ jobs:
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
-
-      - name: Hugo cache save
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ runner.temp }}/hugo_cache
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
