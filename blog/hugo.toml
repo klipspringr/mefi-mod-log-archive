@@ -15,6 +15,7 @@ section = '/posts/'   # The section for which to build archive pages.
 prefix = '/archive/'  # The URL prefix for archive pages.
 paginate = false      # Whether to paginate archive pages.
 navigation = false    # Whether to display previous and next buttons on archive pages.
+enableDaily = false   # Whether to generate daily archives.
 
 [params.modules.archive.formats]
 year = "2006"
