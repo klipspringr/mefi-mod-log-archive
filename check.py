@@ -31,11 +31,13 @@ def fetch_mod_actions():
 
     try:
         html = urlopen(MOD_LOG_URL).read()
-    except HTTPError:
-        raise
-    except (URLError, ConnectionError) as x:
-        print("Failing silently on connection error")
+    except (URLError, ConnectionError, HTTPError) as x:
+        # fail silently on any URLError or ConnectionError, and on HTTPError if code indicates CloudFlare can't reach origin
+        # https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
+        if isinstance(x, HTTPError) and not (520 <= x.code <= 530):
+            raise
         print(x)
+        print("Failing silently")
         return
 
     soup = bs4.BeautifulSoup(html, "lxml")
