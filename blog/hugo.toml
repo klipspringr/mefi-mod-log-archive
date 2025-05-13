@@ -1,11 +1,14 @@
 title = 'MeFi mod log archive'
 languageCode = 'en-GB'
 
+[taxonomies]
+tag = 'tags'
+
 [pagination]
 pagerSize = 100
 
-[taxonomies]
-tag = 'tags'
+[services.rss]
+limit = 100
 
 [[module.imports]]
 path = 'github.com/jmooring/hugo-module-archive'
