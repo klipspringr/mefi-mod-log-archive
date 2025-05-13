@@ -24,3 +24,9 @@ enableDaily = false   # Whether to generate daily archives.
 year = "2006"
 month = "January 2006"
 day = "2 January 2006"
+
+# https://github.com/jmooring/hugo-module-archive/discussions/3#discussioncomment-13118489
+[[cascade]]
+outputs = ['html']
+[cascade.target]
+path = '{/archive,/archive/**}'

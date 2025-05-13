@@ -13,7 +13,7 @@
     {{ if gt .Params.tags 0 }}
     <div>
         {{ range .Params.tags }}
-        🏷️ <a href="{{ . | urlize | urls.JoinPath "tags/" | relURL }}">{{ . }}</a>
+        🏷️ <a href="{{ . | urlize | urls.JoinPath `tags/` | relURL }}">{{ . }}</a>
         {{ end }}
     </div>
     {{ end }}
