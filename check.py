@@ -80,6 +80,13 @@ def fetch_mod_actions():
         # split() to work around unclosed tags
         text = action.decode_contents().strip().split('<div class="copy comment">')[0]
 
+        # remove CloudFlare email protection links, as they contain a hash which changes on every check
+        text = re.sub(
+            '<a href="/cdn-cgi/l/email-protection#.+">.+</a>',
+            "[email protected]",
+            text,
+        )
+
         post = HTML_TEMPLATE.format(
             title=title,
             timestamp=timestamp,
