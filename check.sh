@@ -5,6 +5,8 @@ cd "$(dirname "$0")"
 # shellcheck disable=1091
 . .env/bin/activate
 
+git pull
+
 python ./check.py
 
 git add blog/content/posts
