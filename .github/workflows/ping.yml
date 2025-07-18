@@ -1,0 +1,24 @@
+name: Ping MetaFilter from GitHub
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "ping"
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Ping MetaFilter
+        run: python -c "from urllib.request import urlopen;print(urlopen('https://www.metafilter.com/recent-mod-actions.cfm').getcode())"
+
