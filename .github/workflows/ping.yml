@@ -19,8 +19,5 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Ping homepage
-        run: python -c "from urllib.request import urlopen;print(urlopen('https://www.metafilter.com/').getcode())"
-
-      - name: Ping mod log
-        run: python -c "from urllib.request import urlopen;print(urlopen('https://www.metafilter.com/recent-mod-actions.cfm').getcode())"
+      - name: Ping MetaFilter
+        run: python ping.py
