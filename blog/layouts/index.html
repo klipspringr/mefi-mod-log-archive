@@ -24,7 +24,7 @@
             {{ .Content }}
         </section>
         {{ end }}
-        {{ template "partials/paginator.html" . }}
+        {{- partial "pagination.html" . }}
         {{ partial "archive/widget.html" }}
         {{ partial "footer.html" . }}
     </div>

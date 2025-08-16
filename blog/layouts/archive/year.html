@@ -1,6 +1,5 @@
 {{ define "main" }}
 
-{{- $cfg := site.Params.modules.archive }}
 {{- $p := slice }}
 {{- $section := strings.Trim (site.Params.modules.archive.section) "/" }}
 {{- range where site.RegularPages "Section" $section }}
@@ -9,15 +8,27 @@
 {{- end }}
 {{- end }}
 
+{{ $pag := .Paginate $p }}
+
 {{ partial "archive/widget.html" }}
 
-<h1>{{ .Title }} &middot; {{ len $p }}</h1>
+<h1>{{- .Title -}}</h1>
+
+<div class="count">
+    {{ $pag.TotalNumberOfElements }} entries
+    {{ if gt $pag.TotalPages 1 }}
+    &middot; Page {{ $pag.PageNumber }} of {{ $pag.TotalPages }}
+    {{ end }}
+</div>
 
 <ul class="posts">
-    {{- range $p }}
+    {{- range $pag.Pages }}
     {{ partial "item.html" . }}
     {{- end -}}
 </ul>
 
+{{- partial "pagination.html" . }}
+
 {{ partial "archive/widget.html" }}
+
 {{ end }}

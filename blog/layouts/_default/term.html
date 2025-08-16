@@ -1,15 +1,27 @@
 {{ define "main" }}
-{{ if isset .Data "Term" }}
-<h1>Entries in "{{ .Data.Term }}" &middot {{ len .Data.Pages }}</h1>
-{{ else }}
-<h1>All items</h1>
-{{ end }}
+
+{{- $pag := .Paginate .Data.Pages }}
+
+<h1>
+    {{ if isset .Data "Term" }}
+    Entries in "{{ .Data.Term }}"
+    {{ else }}
+    All items
+    {{ end }}
+</h1>
+
+<div class="count">
+    {{ $pag.TotalNumberOfElements }} entries
+    {{ if gt $pag.TotalPages 1 }}
+    &middot; Page {{ $pag.PageNumber }} of {{ $pag.TotalPages }}
+    {{ end }}
+</div>
 
 <ul class="posts">
-    {{- range .Data.Pages -}}
-    {{- if (not (in (.Site.Params.excludedTypes | default (slice "page")) .Type)) -}}
+    {{- range $pag.Pages -}}
     {{ partial "item.html" . }}
     {{- end -}}
-    {{- end -}}
 </ul>
+
+{{- partial "pagination.html" . }}
 {{ end }}
