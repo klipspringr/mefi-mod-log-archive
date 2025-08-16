@@ -34,7 +34,7 @@ hash = "{hash}"
 
 
 # https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
-HTTP_ERRORS_ALLOW = (403, 520, 521, 522, 523, 524, 525, 526, 530)
+HTTP_ERRORS_SILENCE = (520, 521, 522, 523, 524, 525, 526, 530)
 
 
 def fetch_mod_actions():
@@ -44,7 +44,7 @@ def fetch_mod_actions():
         html = urlopen(Request(MOD_LOG_URL, headers=HEADERS)).read()
     except (URLError, ConnectionError, HTTPError) as x:
         # fail silently on any URLError or ConnectionError, and on HTTPError if code indicates CloudFlare can't reach origin
-        if isinstance(x, HTTPError) and x.code not in HTTP_ERRORS_ALLOW:
+        if isinstance(x, HTTPError) and x.code not in HTTP_ERRORS_SILENCE:
             raise
         print(x)
         print("Failing silently")
