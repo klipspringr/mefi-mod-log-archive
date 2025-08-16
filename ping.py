@@ -12,4 +12,7 @@ for url in [
     "https://www.metafilter.com/recent-mod-actions.cfm",
 ]:
     response = urlopen(Request(url, headers=HEADERS))
-    print(url, response.getcode())
+    code = response.getcode()
+    if code != 200:
+        raise f"{url} returned HTTP {code}"
+    print(url, code)

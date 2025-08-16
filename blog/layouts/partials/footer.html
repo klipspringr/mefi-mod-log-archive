@@ -6,7 +6,11 @@
         &middot; MetaFilter timestamps are Pacific Time.
     </p>
     <p>
-        We check for new mod actions every 10 minutes. Checks may be delayed by up to an hour at busy times.
+        We check for new mod actions every 20 minutes. Checks may be delayed by up to an hour at busy times.
+    </p>
+    <p>
+        MetaFilter's Cloudflare setup sometimes prevents us checking for new mod actions. We're missing some entries
+        around 5 to 8 August 2025 because of this.
     </p>
     <p>
         Built at {{ now.UTC | dateFormat "15:04 MST" }} on {{ now.UTC | dateFormat ":date_long" }}.

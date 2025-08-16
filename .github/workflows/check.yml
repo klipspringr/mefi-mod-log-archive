@@ -2,8 +2,8 @@ name: Check recent mod actions
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "*/10 * * * *"
+  schedule:
+    - cron: "*/20 * * * *"
 
 permissions:
   contents: write
