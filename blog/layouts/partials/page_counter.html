@@ -1,0 +1,6 @@
+<div class="count">
+    <strong>{{ .TotalNumberOfElements }}</strong> entries
+    {{ if gt .TotalPages 1 }}
+    &middot; Page <strong>{{ .PageNumber }}</strong> of <strong>{{ .TotalPages }}</strong>
+    {{ end }}
+</div>

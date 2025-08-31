@@ -3,7 +3,7 @@
     <div>
         <h1><a href="{{ .Params.url }}">{{ .Title }}</a></h1>
         <time>
-            {{ dateFormat ":date_full" .Date }} at {{ dateFormat ":time_short" .Date }} Server Time
+            {{ dateFormat ":date_full" .Date }} at {{ dateFormat ":time_short" .Date }} Pacific Time
         </time>
     </div>
     <div>
@@ -18,7 +18,7 @@
     </div>
     {{ end }}
     <div>
-        🕙 <a href="{{ template `partials/historylink.html` . }}" target="_blank" title="Edit history">Edit
+        🕙 <a href="{{ template `partials/history_link.html` . }}" target="_blank" title="Edit history">Edit
             history</a>
     </div>
 </article>

@@ -1,6 +1,7 @@
 <li>
     <a href="{{ .RelPermalink }}">{{.Title}}</a>
-    <div class="meta">{{ dateFormat ":date_full" .Date }}
+    <div class="meta">
+        {{ dateFormat ":date_full" .Date }}
         {{ if gt .Params.tags 0 }}
         &middot;
         {{ range .Params.tags }}

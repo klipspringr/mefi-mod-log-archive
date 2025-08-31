@@ -14,12 +14,7 @@
 
 <h1>{{- .Title -}}</h1>
 
-<div class="count">
-    {{ $pag.TotalNumberOfElements }} entries
-    {{ if gt $pag.TotalPages 1 }}
-    &middot; Page {{ $pag.PageNumber }} of {{ $pag.TotalPages }}
-    {{ end }}
-</div>
+{{ partial "page_counter.html" $pag }}
 
 <ul class="posts">
     {{- range $pag.Pages }}
