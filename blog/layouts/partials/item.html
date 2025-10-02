@@ -1,12 +1,13 @@
-<li>
-    <a href="{{ .RelPermalink }}">{{.Title}}</a>
-    <div class="meta">
-        {{ dateFormat ":date_full" .Date }}
-        {{ if gt .Params.tags 0 }}
-        &middot;
-        {{ range .Params.tags }}
-        🏷️ <a href="{{ . | urlize | urls.JoinPath `tags/` | relURL }}">{{ . }}</a>
-        {{ end }}
-        {{ end }}
-    </div>
-</li>
+<section>
+    <h1 class="post-title">
+        <div>
+            <a href="{{ .Params.URL }}">{{.Title}}</a>
+        </div>
+        <div>
+            <a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
+            <a href="{{ template `partials/history_link.html` . }}" class="tool" target="_blank"
+                title="Edit history">🕙</a>
+        </div>
+    </h1>
+    {{ .Content }}
+</section>

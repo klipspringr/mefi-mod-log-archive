@@ -12,11 +12,9 @@
 
 {{ partial "page_counter.html" $pag }}
 
-<ul class="posts">
-    {{- range $pag.Pages -}}
-    {{ partial "item.html" . }}
-    {{- end -}}
-</ul>
+{{- range $pag.Pages -}}
+{{ partial "item.html" . }}
+{{- end -}}
 
 {{- partial "pagination.html" . }}
 {{ end }}

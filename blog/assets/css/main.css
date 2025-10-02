@@ -171,18 +171,6 @@ article {
   gap: 1em;
 }
 
-ul.posts > li {
-  margin-bottom: 1.5em;
-  padding-left: 0;
-}
-
-ul.posts > li > div.meta {
-  font-size: smaller;
-  line-height: 1.5em;
-  padding: 0.4em 0;
-  color: #999;
-}
-
 /* Mefi HTML */
 div.postbyline {
   background-color: var(--bgcl);

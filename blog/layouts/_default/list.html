@@ -5,9 +5,8 @@
 <h1>All articles</h1>
 {{ end }}
 
-<ul class="posts">
-    {{- range .Data.Pages -}}
-    {{ partial "item.html" . }}
-    {{- end -}}
-</ul>
+{{- range .Data.Pages -}}
+{{ partial "item.html" . }}
+{{- end -}}
+
 {{ end }}

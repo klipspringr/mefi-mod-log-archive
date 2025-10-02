@@ -10,19 +10,7 @@
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
         {{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
         {{ range $paginator.Pages }}
-        <section>
-            <h1 class="post-title">
-                <div>
-                    <a href="{{ .Params.URL }}">{{.Title}}</a>
-                </div>
-                <div>
-                    <a href="{{ .RelPermalink }}" class="tool" title="Permalink">🔗</a>
-                    <a href="{{ template `partials/history_link.html` . }}" class="tool" target="_blank"
-                        title="Edit history">🕙</a>
-                </div>
-            </h1>
-            {{ .Content }}
-        </section>
+        {{- partial "item.html" . }}
         {{ end }}
         {{- partial "pagination.html" . }}
         {{ partial "archive/widget.html" }}
