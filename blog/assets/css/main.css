@@ -10,7 +10,7 @@
   font-display: swap;
   font-family: "Reddit Sans";
   font-style: normal;
-  font-weight: normal;
+  font-weight: 500;
   src: url("../fonts/reddit-sans-v6-latin-500.woff2") format("woff2");
 }
 /* reddit-sans-700 - latin */
@@ -18,13 +18,14 @@
   font-display: swap;
   font-family: "Reddit Sans";
   font-style: normal;
-  font-weight: bold;
+  font-weight: 700;
   src: url("../fonts/reddit-sans-v6-latin-700.woff2") format("woff2");
 }
 html {
   color: #333;
   font-family: "Reddit Sans", Arial, sans-serif;
   font-size: 16px;
+  font-weight: 500;
   line-height: 1.6em;
 }
 
