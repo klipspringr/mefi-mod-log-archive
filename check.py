@@ -2,20 +2,13 @@
 import hashlib
 import re
 from pathlib import Path
-from urllib.error import HTTPError, URLError
-from urllib.request import urlopen, Request
+from curl_cffi import requests
+from curl_cffi.requests.exceptions import HTTPError
 
 import bs4
 import dateparser
 
 MOD_LOG_URL = "https://www.metafilter.com/recent-mod-actions.cfm"
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
-}
-
 
 HTML_BASEDIR = Path(__file__).parent / "blog" / "content" / "posts"
 
@@ -34,21 +27,30 @@ hash = "{hash}"
 """
 
 
-# https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
-HTTP_ERRORS_SILENCE = (520, 521, 522, 523, 524, 525, 526, 530)
-
-
 def fetch_mod_actions():
     HTML_BASEDIR.mkdir(exist_ok=True)
 
     try:
-        html = urlopen(Request(MOD_LOG_URL, headers=HEADERS)).read()
-    except (URLError, ConnectionError, HTTPError) as x:
-        # fail silently on any URLError or ConnectionError, and on HTTPError if code indicates CloudFlare can't reach origin
-        if isinstance(x, HTTPError) and x.code not in HTTP_ERRORS_SILENCE:
+        # curl_cffi appeases the cloudflare gods. for now
+        html = requests.get(MOD_LOG_URL, impersonate="chrome").text
+    except (ConnectionError, HTTPError) as x:
+        # fail silently on any ConnectionError, and on HTTPError if code indicates CloudFlare can't reach origin
+        # https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
+        if isinstance(x, HTTPError) and x.code not in (
+            520,
+            521,
+            522,
+            523,
+            524,
+            525,
+            526,
+            530,
+        ):
             raise
+
         print(x)
         print("Failing silently")
+
         return
 
     soup = bs4.BeautifulSoup(html, "lxml")
