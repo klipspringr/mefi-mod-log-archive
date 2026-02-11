@@ -1,18 +1,11 @@
 #!/usr/bin/python
-from urllib.request import Request, urlopen
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
-}
+from curl_cffi import requests
 
 for url in [
     "https://www.metafilter.com",
     "https://www.metafilter.com/recent-mod-actions.cfm",
 ]:
-    response = urlopen(Request(url, headers=HEADERS))
-    code = response.getcode()
+    code = requests.get(url, impersonate="chrome").status_code
     if code != 200:
         raise f"{url} returned HTTP {code}"
     print(url, code)
