@@ -1,0 +1,14 @@
+{{ define "main" }}
+<div id="search"></div>
+
+<link href="{{ relURL `pagefind/pagefind-ui.css` }}" rel="stylesheet" />
+<script src="{{ relURL `pagefind/pagefind-ui.js` }}"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({
+            element: "#search", showImages: false, autofocus: true
+        });
+    });
+</script>
+{{ end }}
