@@ -9,6 +9,7 @@
     </div>
     <nav>
         <a href="{{ relURL `` }}">🏠 Home</a>
+        <a href="{{ relURL `search` }}">🔎 Search</a>
         <a href="{{ relURL `tags` }}">🏷️ Tags</a>
         {{ with .OutputFormats.Get "rss" -}}
         <a href="{{ .Permalink }}">📢 RSS</a>

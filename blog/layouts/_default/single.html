@@ -1,12 +1,20 @@
 {{ define "main" }}
 <article>
     <div>
-        <h1><a href="{{ .Params.url }}">{{ .Title }}</a></h1>
+        <h1>
+            {{ if isset .Params "url" }}
+            <a href="{{ .Params.url }}">{{ .Title }}</a>
+            {{ else }}
+            {{ .Title }}
+            {{ end }}
+        </h1>
+        {{ with .Params.Date }}
         <time>
-            {{ dateFormat ":date_full" .Date }} at {{ dateFormat ":time_short" .Date }} Pacific Time
+            {{ dateFormat ":date_full" . }} at {{ dateFormat ":time_short" . }} Pacific Time
         </time>
+        {{ end }}
     </div>
-    <div>
+    <div data-pagefind-body>
         {{ .Content }}
     </div>
     {{ if ne .Type "page" }}
@@ -21,6 +29,6 @@
         🕙 <a href="{{ template `partials/history_link.html` . }}" target="_blank" title="Edit history">Edit
             history</a>
     </div>
+    {{ end }}
 </article>
-{{ end }}
 {{ end }}

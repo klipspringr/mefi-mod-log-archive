@@ -28,7 +28,7 @@ jobs:
           cache: "pip"
 
       - name: Install pip requirements
-        run: pip install -r requirements.txt
+        run: pip install -r requirements_check.txt
 
       - name: Check recent mod actions
         run: python check.py

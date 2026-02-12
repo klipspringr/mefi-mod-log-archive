@@ -24,17 +24,26 @@ jobs:
       HUGO_VERSION: 0.147.3
       HUGO_ENVIRONMENT: production
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Install Hugo CLI
         run: |
           wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
           sudo dpkg -i ${{ runner.temp }}/hugo.deb
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install pip requirements
+        run: pip install -r requirements_deploy.txt
 
       - name: Hugo build
         working-directory: ./blog
@@ -46,6 +55,9 @@ jobs:
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Build Pagefind index
+        run: python3 -m pagefind --site blog/public
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
