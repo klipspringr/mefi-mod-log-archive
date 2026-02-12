@@ -22,9 +22,7 @@ jobs:
         with:
           python-version: "3.13"
           cache: "pip"
-
-      - name: Install pip requirements
-        run: pip install -r requirements_check.txt
+          pip-install: -r requirements_check.txt
 
       - name: Ping MetaFilter
         run: python ping.py

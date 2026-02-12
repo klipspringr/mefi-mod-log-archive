@@ -41,9 +41,7 @@ jobs:
         with:
           python-version: "3.13"
           cache: "pip"
-
-      - name: Install pip requirements
-        run: pip install -r requirements_deploy.txt
+          pip-install: -r requirements_deploy.txt
 
       - name: Hugo build
         working-directory: ./blog
