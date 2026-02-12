@@ -14,15 +14,14 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Setup Python
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
           cache: "pip"
-          pip-install: -r requirements_check.txt
+
+      - run: pip install -r requirements.txt
 
       - name: Ping MetaFilter
         run: python ping.py
