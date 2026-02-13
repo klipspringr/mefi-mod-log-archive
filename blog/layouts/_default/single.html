@@ -10,7 +10,7 @@
         </h1>
         {{ with .Params.Date }}
         <time>
-            {{ dateFormat ":date_full" . }} at {{ dateFormat ":time_short" . }} Pacific Time
+            {{ dateFormat "Monday 2 January 2006" . }} at {{ dateFormat ":time_short" . }} Pacific Time
         </time>
         {{ end }}
     </div>

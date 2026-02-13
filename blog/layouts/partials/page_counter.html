@@ -1,6 +1,7 @@
 <div class="count">
-    <strong>{{ .TotalNumberOfElements }}</strong> entries
+    <strong>{{ .TotalNumberOfElements | lang.FormatNumber 0 }}</strong> entries
     {{ if gt .TotalPages 1 }}
-    &middot; Page <strong>{{ .PageNumber }}</strong> of <strong>{{ .TotalPages }}</strong>
+    &middot; Page <strong>{{ .PageNumber | lang.FormatNumber 0 }}</strong>
+    of <strong>{{ .TotalPages | lang.FormatNumber 0 }}</strong>
     {{ end }}
 </div>

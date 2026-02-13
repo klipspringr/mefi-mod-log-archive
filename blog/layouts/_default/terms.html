@@ -5,7 +5,7 @@
     {{ range $key, $value := .Data.Terms.ByCount }}
     <li>
         🏷️ <a href="{{ $value.Name | urlize }}/">{{ $value.Name }}</a>
-        &middot; {{ $value.Count }}
+        &middot; {{ $value.Count | lang.FormatNumber 0 }}
     </li>
     {{ end }}
 </ul>
