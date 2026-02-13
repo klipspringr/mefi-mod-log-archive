@@ -1,4 +1,7 @@
 <footer>
+    {{ with .OutputFormats.Get "rss" -}}
+    <p><a href="{{ .Permalink }}">📢 RSS feed for this page</a></p>
+    {{ end -}}
     <p>
         Made by <a href="https://www.metafilter.com/user/304523">Klipspringer</a>
         &middot; Report issues on <a href="https://github.com/klipspringr/mefi-mod-log-archive">GitHub</a>
