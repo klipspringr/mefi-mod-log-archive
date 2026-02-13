@@ -17,4 +17,6 @@
 
     {{ $style := resources.Get "css/main.css" | fingerprint }}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ $style.Permalink }}" />
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "2e256be9e7c34b8c8656111819385372"}'></script>
 </head>
