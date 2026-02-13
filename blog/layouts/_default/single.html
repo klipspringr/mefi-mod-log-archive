@@ -31,4 +31,9 @@
     </div>
     {{ end }}
 </article>
+<script type="module">
+    const pagefindHighlightJs = "{{ relURL `/pagefind/pagefind-highlight.js` }}"
+    await import(pagefindHighlightJs);
+    new PagefindHighlight({ highlightParam: "highlight" });
+</script>
 {{ end }}

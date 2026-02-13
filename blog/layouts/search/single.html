@@ -9,7 +9,10 @@
         const q = new URLSearchParams(window.location.search).get('q');
 
         const search = new PagefindUI({
-            element: "#search", showImages: false, autofocus: !q
+            element: "#search",
+            showImages: false,
+            autofocus: !q,
+            highlightParam: "highlight"
         });
 
         if (q) {
