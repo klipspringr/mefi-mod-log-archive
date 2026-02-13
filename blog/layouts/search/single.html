@@ -6,9 +6,15 @@
 
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
-        new PagefindUI({
-            element: "#search", showImages: false, autofocus: true
+        const q = new URLSearchParams(window.location.search).get('q');
+
+        const search = new PagefindUI({
+            element: "#search", showImages: false, autofocus: !q
         });
+
+        if (q) {
+            search.triggerSearch(q)
+        }
     });
 </script>
 {{ end }}
