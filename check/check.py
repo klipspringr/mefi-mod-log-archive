@@ -10,7 +10,7 @@ import dateparser
 
 MOD_LOG_URL = "https://www.metafilter.com/recent-mod-actions.cfm"
 
-HTML_BASEDIR = Path(__file__).parent / "blog" / "content" / "posts"
+HTML_BASEDIR = Path(__file__).parent.parent / "blog" / "content" / "posts"
 
 HTML_TEMPLATE = """+++
 title = "{title}"
