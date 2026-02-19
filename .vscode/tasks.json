@@ -4,11 +4,8 @@
     {
       "label": "Hugo",
       "type": "shell",
-      "command": "mkdir -p assets/data && hugo mod verify && hugo list published > assets/data/published-content.csv && ${command:python.interpreterPath} -m pagefind --site public && hugo server --gc --bind=0.0.0.0",
-      "problemMatcher": [],
-      "options": {
-        "cwd": "${workspaceFolder}/blog"
-      }
+      "command": "./blog/serve.sh",
+      "problemMatcher": []
     }
   ]
 }
