@@ -17,7 +17,7 @@ title = "{title}"
 date = "{timestamp}"
 
 kinds = ["{kind}"]
-sites = ["{site}"]
+subsites = ["{site}"]
 mods = ["{mod}"]
 
 [params]
