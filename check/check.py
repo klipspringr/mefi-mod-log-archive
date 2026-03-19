@@ -15,6 +15,7 @@ HTML_BASEDIR = Path(__file__).parent.parent / "blog" / "content" / "posts"
 HTML_TEMPLATE = """+++
 title = "{title}"
 date = "{timestamp}"
+
 kinds = ["{kind}"]
 sites = ["{site}"]
 mods = ["{mod}"]
