@@ -68,6 +68,8 @@ def fetch_mod_actions():
             settings={
                 "TIMEZONE": "America/Los_Angeles",  # mefi server is Pacific Time
                 "RETURN_AS_TIMEZONE_AWARE": True,
+                # mod log timestamps don't include year, so we need to specify that dateparser should assume ambiguous dates are from last year
+                "PREFER_DATES_FROM": "past",
             },
         ).isoformat()
 
