@@ -5,7 +5,9 @@ languageCode = 'en-GB'
 buildFuture = true 
 
 [taxonomies]
-tag = 'tags'
+kind = 'kinds'
+mod = 'mods'
+subsite = 'subsites'
 
 [pagination]
 pagerSize = 100

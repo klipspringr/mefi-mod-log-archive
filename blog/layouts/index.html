@@ -5,7 +5,9 @@
 <body>
     <div class="content">
         {{ partial "header.html" . }}
-        {{ partial "archive/widget.html" }}
+        <div class="archive-widget-wrapper">
+            {{ partial "archive/widget.html" }}
+        </div>
 
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
         {{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
@@ -13,7 +15,9 @@
         {{- partial "item.html" . }}
         {{ end }}
         {{- partial "pagination.html" . }}
-        {{ partial "archive/widget.html" }}
+        <div class="archive-widget-wrapper">
+            {{ partial "archive/widget.html" }}
+        </div>
         {{ partial "footer.html" . }}
     </div>
 </body>

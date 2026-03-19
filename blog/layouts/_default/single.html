@@ -1,7 +1,7 @@
 {{ define "main" }}
 <article>
     <div>
-        <h1>
+        <h1 data-pagefind-meta="title">
             {{ if isset .Params "url" }}
             <a href="{{ .Params.url }}">{{ .Title }}</a>
             {{ else }}
@@ -17,19 +17,7 @@
     <div data-pagefind-body>
         {{ .Content }}
     </div>
-    {{ if ne .Type "page" }}
-    {{ if gt .Params.tags 0 }}
-    <div>
-        {{ range .Params.tags }}
-        🏷️ <a href="{{ . | urlize | urls.JoinPath `tags/` | relURL }}">{{ . }}</a>
-        {{ end }}
-    </div>
-    {{ end }}
-    <div>
-        🕙 <a href="{{ template `partials/history_link.html` . }}" target="_blank" title="Edit history">Edit
-            history</a>
-    </div>
-    {{ end }}
+    {{ partial "byline.html" . }}
 </article>
 <script type="module">
     const pagefindHighlightJs = "{{ relURL `/pagefind/pagefind-highlight.js` }}"

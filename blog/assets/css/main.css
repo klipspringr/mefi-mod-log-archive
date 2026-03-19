@@ -2,7 +2,7 @@
   --maincl: #185c8d;
   --darkcl: #155484;
   --hicl: #8dc3d7;
-  --bgcl: #b1d7e4;
+  --bgcl: #daf0f7;
 }
 
 /* reddit-sans-500 - latin */
@@ -13,6 +13,7 @@
   font-weight: 500;
   src: url("../fonts/reddit-sans-v6-latin-500.woff2") format("woff2");
 }
+
 /* reddit-sans-700 - latin */
 @font-face {
   font-display: swap;
@@ -21,6 +22,7 @@
   font-weight: 700;
   src: url("../fonts/reddit-sans-v6-latin-700.woff2") format("woff2");
 }
+
 html {
   color: #333;
   font-family: "Reddit Sans", Arial, sans-serif;
@@ -52,11 +54,6 @@ a {
 a:hover {
   background-color: var(--darkcl);
   color: #fff;
-}
-
-ul {
-  list-style: none;
-  padding-left: 0;
 }
 
 h1,
@@ -102,8 +99,16 @@ div.sub {
   margin-top: 0.5em;
 }
 
+header nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
 header nav a {
-  padding: 0.5em;
+  padding: 0.25em 0.5em;
+  background-color: var(--bgcl);
 }
 
 div.warning {
@@ -121,9 +126,14 @@ footer {
   padding: 1em 0;
   margin-top: 2em;
   font-size: 0.9em;
+  color: #666;
 }
 
 /* Archive widget */
+div.archive-widget-wrapper {
+  overflow-x: auto;
+}
+
 table.archive-widget {
   background-color: var(--darkcl);
   padding: 0.5em 1em;
@@ -139,6 +149,7 @@ table.archive-widget a {
 
 /* Paginator */
 ul.pagination {
+  list-style: none;
   background-color: var(--darkcl);
   padding: 0.5em 1em;
   display: flex;
@@ -174,12 +185,26 @@ table.archive-widget a {
   font-weight: bold;
 }
 
+/* Terms */
+ul.terms > li {
+  padding-left: 0.5em;
+}
+
+ul.terms-kinds {
+  list-style: "🔖";
+}
+
+ul.terms-subsites {
+  list-style: "🌎";
+}
+
+ul.terms-mods {
+  list-style: "👮";
+}
+
 /* Posts */
 h1.post-title {
-  display: grid;
-  grid-template-columns: 1fr auto;
   margin-bottom: 0.5em;
-  gap: 0.5em;
 }
 
 article {
@@ -188,17 +213,22 @@ article {
   gap: 1em;
 }
 
-/* Mefi HTML */
-div.postbyline {
+div.byline {
+  display: flex;
+  flex-wrap: wrap;
   background-color: var(--bgcl);
-  color: var(--darkcl);
-  font-size: small;
-  padding: 0.2em 0.5em;
   margin-top: 0.5em;
-  line-height: 1.5em;
+  padding: 0.35em 0.5em;
+  gap: 0 0.5em;
+  font-size: 0.9em;
+  cursor: default;
 }
 
-div.postbyline > a {
-  border-bottom: 2px solid var(--darkcl);
-  font-weight: bold;
+div.byline > div {
+  white-space: nowrap;
+}
+
+/* hide Mefi post byline */
+div.postbyline {
+  display: none !important;
 }

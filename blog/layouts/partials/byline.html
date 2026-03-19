@@ -1,0 +1,28 @@
+{{ $mod := index .Params.mods 0 }}
+{{ $subsite := index .Params.subsites 0 }}
+{{ $kind := index .Params.kinds 0 }}
+<div class="byline">
+    <div>
+        🔗 <a href="{{ .RelPermalink }}" title="Permalink">Permalink</a>
+    </div>
+    <div>
+        👮 <a href="{{ $mod | urlize | urls.JoinPath `mods/` | relURL }}" data-pagefind-filter="mod">
+            {{ $mod }}
+        </a>
+    </div>
+    <div>
+        🌎 <a href="{{ $subsite | urlize | urls.JoinPath `subsites/` | relURL }}" data-pagefind-filter="site">
+            {{ $subsite }}
+        </a>
+    </div>
+    <div>
+        🔖 <a href="{{ $kind | urlize | urls.JoinPath `kinds/` | relURL }}" data-pagefind-filter="kind">
+            {{ $kind }}
+        </a>
+    </div>
+    <div>
+        🕙 <a href="{{ partial `history_link.html` . }}" target="_blank" title="See edit history on GitHub">
+            History
+        </a>
+    </div>
+</div>

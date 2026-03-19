@@ -15,11 +15,12 @@ HTML_BASEDIR = Path(__file__).parent.parent / "blog" / "content" / "posts"
 HTML_TEMPLATE = """+++
 title = "{title}"
 date = "{timestamp}"
-tags = ["{kind}", "{site}", "{mod}"]
+kinds = ["{kind}"]
+sites = ["{site}"]
+mods = ["{mod}"]
 
 [params]
 url = "{url}"
-site = "{site}"
 hash = "{hash}"
 +++
 
@@ -31,10 +32,10 @@ def fetch_mod_actions():
     HTML_BASEDIR.mkdir(exist_ok=True)
 
     try:
-        # curl_cffi appeases the cloudflare gods. for now
+        # curl_cffi appeases the Cloudflare gods. for now
         html = requests.get(MOD_LOG_URL, impersonate="chrome").text
     except (ConnectionError, HTTPError) as x:
-        # fail silently on any ConnectionError, and on HTTPError if code indicates CloudFlare can't reach origin
+        # fail silently on any ConnectionError, and on HTTPError if code indicates Cloudflare can't reach origin
         # https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
         if isinstance(x, HTTPError) and x.code not in (
             520,
@@ -66,7 +67,7 @@ def fetch_mod_actions():
         timestamp = dateparser.parse(
             f"{byline[2]} {byline[3].text}",
             settings={
-                "TIMEZONE": "America/Los_Angeles",  # mefi server is Pacific Time
+                "TIMEZONE": "America/Los_Angeles",  # Mefi server is Pacific Time
                 "RETURN_AS_TIMEZONE_AWARE": True,
                 # mod log timestamps don't include year, so we need to specify that dateparser should assume ambiguous dates are from last year
                 "PREFER_DATES_FROM": "past",
@@ -93,7 +94,7 @@ def fetch_mod_actions():
         # split() to work around unclosed tags
         text = action.decode_contents().strip().split('<div class="copy comment">')[0]
 
-        # remove CloudFlare email protection links, as they contain a hash which changes on every check
+        # remove Cloudflare email protection links, as they contain a hash which changes on every check
         text = re.sub(
             '<a href="/cdn-cgi/l/email-protection#.+">.+</a>',
             "[email protected]",
