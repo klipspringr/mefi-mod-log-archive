@@ -8,11 +8,6 @@
             {{ .Title }}
             {{ end }}
         </h1>
-        {{ with .Params.Date }}
-        <time>
-            {{ dateFormat "Monday 2 January 2006" . }} at {{ dateFormat ":time_short" . }} Pacific Time
-        </time>
-        {{ end }}
     </div>
     <div data-pagefind-body>
         {{ .Content }}

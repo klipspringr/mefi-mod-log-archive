@@ -3,25 +3,28 @@
 {{ $kind := index .Params.kinds 0 }}
 <div class="byline">
     <div>
-        🔗 <a href="{{ .RelPermalink }}" title="Permalink">Permalink</a>
+        🔗 <a href="{{ .RelPermalink }}" title="Permalink | Pacific Time">
+            {{ dateFormat "Jan 2 2006 3:04PM" .Params.Date }}
+        </a>
     </div>
     <div>
-        👮 <a href="{{ $mod | urlize | urls.JoinPath `mods/` | relURL }}" data-pagefind-filter="mod">
+        👮 <a href="{{ $mod | urlize | urls.JoinPath `mods/` | relURL }}" title="Mod" data-pagefind-filter="mod">
             {{ $mod }}
         </a>
     </div>
     <div>
-        🌎 <a href="{{ $subsite | urlize | urls.JoinPath `subsites/` | relURL }}" data-pagefind-filter="site">
+        🌎 <a href="{{ $subsite | urlize | urls.JoinPath `subsites/` | relURL }}" title="Site"
+            data-pagefind-filter="site">
             {{ $subsite }}
         </a>
     </div>
     <div>
-        🔖 <a href="{{ $kind | urlize | urls.JoinPath `kinds/` | relURL }}" data-pagefind-filter="kind">
+        🔖 <a href="{{ $kind | urlize | urls.JoinPath `kinds/` | relURL }}" title="Kind" data-pagefind-filter="kind">
             {{ $kind }}
         </a>
     </div>
     <div>
-        🕙 <a href="{{ partial `history_link.html` . }}" target="_blank" title="See edit history on GitHub">
+        🕙 <a href="{{ partial `history_link.html` . }}" target="_blank" title="History on GitHub">
             History
         </a>
     </div>

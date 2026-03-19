@@ -111,15 +111,6 @@ header nav a {
   background-color: var(--bgcl);
 }
 
-div.warning {
-  font-size: smaller;
-  line-height: 1.4em;
-  padding: 0.5em 1em;
-  background-color: #fecaca;
-  color: #b91c1c;
-  margin: 1em 0;
-}
-
 /* Footer */
 footer {
   border-top: 0.4em dotted var(--darkcl);
@@ -175,14 +166,41 @@ div.count {
 }
 
 /* Common */
-time {
-  color: #666;
-}
-
 header a,
 footer a,
 table.archive-widget a {
   font-weight: bold;
+}
+
+/* Posts */
+h1.post-title {
+  margin-bottom: 0.5em;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+div.byline {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: var(--bgcl);
+  margin-top: 0.5em;
+  padding: 0.35em 0.5em;
+  gap: 0.2em 0.5em;
+  font-size: 0.9em;
+  cursor: default;
+}
+
+div.byline > div {
+  white-space: nowrap;
+}
+
+/* hide Mefi post byline - should possibly do this in Hugo? */
+div.postbyline {
+  display: none !important;
 }
 
 /* Terms */
@@ -200,35 +218,4 @@ ul.terms-subsites {
 
 ul.terms-mods {
   list-style: "👮";
-}
-
-/* Posts */
-h1.post-title {
-  margin-bottom: 0.5em;
-}
-
-article {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-div.byline {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: var(--bgcl);
-  margin-top: 0.5em;
-  padding: 0.35em 0.5em;
-  gap: 0 0.5em;
-  font-size: 0.9em;
-  cursor: default;
-}
-
-div.byline > div {
-  white-space: nowrap;
-}
-
-/* hide Mefi post byline */
-div.postbyline {
-  display: none !important;
 }

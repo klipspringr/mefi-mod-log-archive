@@ -3,7 +3,9 @@
         <a href="{{ .Params.URL }}">{{.Title}}</a>
     </h1>
     {{ if eq .Kind "page" }}
-    {{ .Content }}
-    {{ partial "byline.html" . }}
+    <div class="item-content">
+        {{ .Content }}
+        {{ partial "byline.html" . }}
+    </div>
     {{ end }}
 </section>
