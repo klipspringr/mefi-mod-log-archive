@@ -2,7 +2,7 @@
 {{ if isset .Data "Term" }}
 <h1>Entries tagged - "{{ .Data.Term }}"</h1>
 {{ else }}
-<h1>All articles</h1>
+<h1>All entries</h1>
 {{ end }}
 
 {{- range .Data.Pages -}}

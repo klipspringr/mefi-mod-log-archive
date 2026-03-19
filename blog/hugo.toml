@@ -2,7 +2,7 @@ title = 'MeFi mod log archive'
 languageCode = 'en-GB'
 
 # better to build posts with faulty dates than silently hide
-buildFuture = true 
+buildFuture = true
 
 [taxonomies]
 kind = 'kinds'

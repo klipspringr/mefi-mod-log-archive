@@ -2,6 +2,8 @@
     <h1 class="post-title">
         <a href="{{ .Params.URL }}">{{.Title}}</a>
     </h1>
+    {{ if eq .Kind "page" }}
     {{ .Content }}
     {{ partial "byline.html" . }}
+    {{ end }}
 </section>
