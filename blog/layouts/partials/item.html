@@ -4,8 +4,8 @@
     </h1>
     {{ if eq .Kind "page" }}
     <div class="item-content">
-        {{ .Content }}
-        {{ partial "byline.html" . }}
+        {{ partial "content.html" . }}
     </div>
+    {{ partial "byline.html" . }}
     {{ end }}
 </section>

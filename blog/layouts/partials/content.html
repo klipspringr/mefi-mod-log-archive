@@ -1,0 +1,2 @@
+{{/* Remove the byline from the content, since it's already displayed in the header. */}}
+{{ .Content | replaceRE `(?s)<div class="smallcopy postbyline">.*?</div>` "" | safeHTML }}

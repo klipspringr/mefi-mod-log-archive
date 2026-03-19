@@ -1,16 +1,14 @@
 {{ define "main" }}
 <article>
-    <div>
-        <h1 data-pagefind-meta="title">
-            {{ if isset .Params "url" }}
-            <a href="{{ .Params.url }}">{{ .Title }}</a>
-            {{ else }}
-            {{ .Title }}
-            {{ end }}
-        </h1>
-    </div>
-    <div data-pagefind-body>
-        {{ .Content }}
+    <h1 data-pagefind-body data-pagefind-meta="title">
+        {{ if isset .Params "url" }}
+        <a href="{{ .Params.url }}">{{ .Title }}</a>
+        {{ else }}
+        {{ .Title }}
+        {{ end }}
+    </h1>
+    <div class="page-content" data-pagefind-body>
+        {{ partial "content.html" . }}
     </div>
     {{ partial "byline.html" . }}
 </article>

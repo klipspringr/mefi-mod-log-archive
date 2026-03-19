@@ -1,30 +1,35 @@
-{{ $mod := index .Params.mods 0 }}
-{{ $subsite := index .Params.subsites 0 }}
-{{ $kind := index .Params.kinds 0 }}
 <div class="byline">
     <div>
         🔗 <a href="{{ .RelPermalink }}" title="Permalink | Pacific Time">
             {{ dateFormat "Jan 2 2006 3:04PM" .Params.Date }}
         </a>
     </div>
+    {{ with index (.GetTerms "mods") 0 }}
     <div>
-        👮 <a href="{{ $mod | urlize | urls.JoinPath `mods/` | relURL }}" title="Mod" data-pagefind-filter="mod">
-            {{ $mod }}
+        👮 <a href="{{ .RelPermalink }}" title="Mod" data-pagefind-filter="mod">
+            {{ .Name }}
         </a>
     </div>
+    {{ end }}
+    {{ with index (.GetTerms "subsites") 0 }}
     <div>
-        🌎 <a href="{{ $subsite | urlize | urls.JoinPath `subsites/` | relURL }}" title="Site"
-            data-pagefind-filter="site">
-            {{ $subsite }}
+        🌎 <a href="{{ .RelPermalink }}" title="Site" data-pagefind-filter="site">
+            {{ .Name }}
         </a>
     </div>
+    {{ end }}
+    {{ with index (.GetTerms "kinds") 0 }}
     <div>
-        🔖 <a href="{{ $kind | urlize | urls.JoinPath `kinds/` | relURL }}" title="Kind" data-pagefind-filter="kind">
-            {{ $kind }}
+        🔖 <a href="{{ .RelPermalink }}" title="Kind" data-pagefind-filter="kind">
+            {{ .Name }}
         </a>
     </div>
+    {{ end }}
     <div>
-        🕙 <a href="{{ partial `history_link.html` . }}" target="_blank" title="History on GitHub">
+        {{ $historyLink := printf
+        `https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/%s-%s.html?author=mefi-activity-automated`
+        (index .Params.subsites 0) .Params.hash }}
+        🕙 <a href="{{ $historyLink }}" target="_blank" title="History on GitHub">
             History
         </a>
     </div>
