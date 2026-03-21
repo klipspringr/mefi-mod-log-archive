@@ -5,19 +5,24 @@
 <body>
     <div class="content">
         {{ partial "header.html" . }}
+
         <div class="archive-widget-wrapper">
             {{ partial "archive/widget.html" }}
         </div>
 
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
         {{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
+        
         {{ range $paginator.Pages }}
         {{- partial "item.html" . }}
         {{ end }}
+
         {{- partial "pagination.html" . }}
+
         <div class="archive-widget-wrapper">
             {{ partial "archive/widget.html" }}
         </div>
+
         {{ partial "footer.html" . }}
     </div>
 </body>

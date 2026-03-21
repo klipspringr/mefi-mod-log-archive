@@ -58,6 +58,10 @@ def fetch_mod_actions():
     soup = bs4.BeautifulSoup(html, "lxml")
 
     actions = soup.find_all("div", {"class": "copy comment"})
+
+    if len(actions) == 0:
+        raise ValueError("No mod actions found, is something wrong?")
+
     print(f"Found {len(actions)} mod actions")
 
     for action in actions:
@@ -96,8 +100,9 @@ def fetch_mod_actions():
         text = action.decode_contents().strip().split('<div class="copy comment">')[0]
 
         # remove Cloudflare email protection links, as they contain a hash which changes on every check
+        # note ? for non-greediness
         text = re.sub(
-            '<a href="/cdn-cgi/l/email-protection#.+">.+</a>',
+            '<a href="/cdn-cgi/l/email-protection#.+?">.+?</a>',
             "[email protected]",
             text,
         )
@@ -113,9 +118,10 @@ def fetch_mod_actions():
             text=text,
         )
 
-        path = HTML_BASEDIR / f"{site}-{hash}.html"
-        with open(path, "w") as f:
+        filename = f"{site}-{hash}.html"
+        with open(HTML_BASEDIR / filename, "w") as f:
             f.write(post)
+            print(f"Wrote {filename} ({title})")
 
 
 if __name__ == "__main__":

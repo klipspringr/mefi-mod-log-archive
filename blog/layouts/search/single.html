@@ -1,5 +1,5 @@
 {{ define "main" }}
-<div id="search"></div>
+<div id="pagefind-search"></div>
 
 <link href="{{ relURL `pagefind/pagefind-ui.css` }}" rel="stylesheet" />
 <script src="{{ relURL `pagefind/pagefind-ui.js` }}"></script>
@@ -10,7 +10,7 @@
 
         const search = new PagefindUI({
             autofocus: !q,
-            element: "#search",
+            element: "#pagefind-search",
             highlightParam: "highlight",
             openFilters: ["kind", "mod", "site"],
             pageSize: 10,

@@ -10,7 +10,9 @@
 
 {{ $pag := .Paginate $p }}
 
-{{ partial "archive/widget.html" }}
+<div class="archive-widget-wrapper">
+    {{ partial "archive/widget.html" }}
+</div>
 
 <h1>{{- .Title -}}</h1>
 
@@ -22,6 +24,8 @@
 
 {{- partial "pagination.html" . }}
 
-{{ partial "archive/widget.html" }}
+<div class="archive-widget-wrapper">
+    {{ partial "archive/widget.html" }}
+</div>
 
 {{ end }}

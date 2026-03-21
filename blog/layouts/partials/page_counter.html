@@ -1,5 +1,5 @@
 <div class="count">
-    <strong>{{ .TotalNumberOfElements | lang.FormatNumber 0 }}</strong> entries
+    <strong>{{ .TotalNumberOfElements | lang.FormatNumber 0 }}</strong> mod actions
     {{ if gt .TotalPages 1 }}
     &middot; Page <strong>{{ .PageNumber | lang.FormatNumber 0 }}</strong>
     of <strong>{{ .TotalPages | lang.FormatNumber 0 }}</strong>

@@ -1,12 +1,20 @@
 {{ define "main" }}
-{{ if isset .Data "Term" }}
-<h1>Entries tagged - "{{ .Data.Term }}"</h1>
-{{ else }}
-<h1>All entries</h1>
-{{ end }}
 
-{{- range .Data.Pages -}}
+{{- $pag := .Paginate .Data.Pages }}
+
+<h1>
+    {{ if isset .Data "Term" }}
+    Tagged "{{ .Data.Term }}"
+    {{ else }}
+    All pages
+    {{ end }}
+</h1>
+
+{{ partial "page_counter.html" $pag }}
+
+{{- range $pag.Pages -}}
 {{ partial "item.html" . }}
 {{- end -}}
 
+{{- partial "pagination.html" . }}
 {{ end }}

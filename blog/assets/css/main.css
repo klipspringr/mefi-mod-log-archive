@@ -76,6 +76,7 @@ h6 {
   padding: 0 0.4em;
   word-wrap: break-word;
 }
+
 section {
   margin: 2em 0;
 }
@@ -93,7 +94,7 @@ header a.home {
   font-size: 1.5em;
 }
 
-div.sub {
+header div.subhead {
   font-size: 14px;
   color: #999;
   margin-top: 0.5em;
@@ -161,15 +162,16 @@ ul.pagination li.active a {
   border: none;
 }
 
-div.count {
-  color: #666;
-}
-
 /* Common */
 header a,
 footer a,
 table.archive-widget a {
   font-weight: bold;
+}
+
+.count {
+  color: #666;
+  font-size: 0.9em;
 }
 
 /* Posts */
@@ -198,8 +200,9 @@ div.byline > div {
   white-space: nowrap;
 }
 
-/* hide Mefi post byline - should possibly do this in Hugo? */
-div.postbyline {
+/* defensively, hide Mefi byline (also stripped in Hugo) */
+.smallcopy,
+.postbyline {
   display: none !important;
 }
 
