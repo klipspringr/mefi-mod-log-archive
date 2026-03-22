@@ -1,6 +1,6 @@
 <header>
     <div>
-        <a href="{{ relURL `` }}" class="home">{{ .Site.Title }}</a>
+        <a href="{{ .Site.Home.RelPermalink }}" class="site-title">{{ .Site.Title }}</a>
         <div class="subhead">
             An archive of MetaFilter's
             <a href="https://www.metafilter.com/recent-mod-actions.cfm">Recent Mod Actions</a>
@@ -8,9 +8,9 @@
         </div>
     </div>
     <nav>
-        <a href="{{ relURL `search` }}">🔎 Search</a>
-        <a href="{{ relURL `mods` }}">👮 Mods</a>
-        <a href="{{ relURL `subsites` }}">🌎 Sites</a>
-        <a href="{{ relURL `kinds` }}">🔖 Kinds</a>
+        <a href="{{ relURL `search/` }}">🔎 Search</a>
+        <a href="{{ relURL `mods/` }}">👮 Mods</a>
+        <a href="{{ relURL `subsites/` }}">🌎 Sites</a>
+        <a href="{{ relURL `kinds/` }}">🔖 Kinds</a>
     </nav>
 </header>
