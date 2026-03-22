@@ -13,7 +13,7 @@
     {{ partial "byline.html" . }}
 </article>
 <script type="module">
-    const pagefindHighlightJs = "{{ relURL `/pagefind/pagefind-highlight.js` }}"
+    const pagefindHighlightJs = "{{ relURL `pagefind/pagefind-highlight.js` }}"
     await import(pagefindHighlightJs);
     new PagefindHighlight({ highlightParam: "highlight" });
 </script>
