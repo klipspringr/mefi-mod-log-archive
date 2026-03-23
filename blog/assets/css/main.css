@@ -1,8 +1,7 @@
 :root {
-  --maincl: #185c8d;
+  --bgcl: #daf0f7;
   --darkcl: #155484;
   --hicl: #8dc3d7;
-  --bgcl: #daf0f7;
 }
 
 /* reddit-sans-500 - latin */
@@ -32,11 +31,11 @@ html {
 }
 
 body {
-  margin: 8px;
+  margin: 0.5em;
 }
 
 ::selection {
-  background: var(--maincl);
+  background: var(--darkcl);
   color: #fff;
 }
 
@@ -95,7 +94,7 @@ header a.site-title {
 }
 
 header div.subhead {
-  font-size: 14px;
+  font-size: 0.85em;
   color: #999;
   margin-top: 0.5em;
 }
