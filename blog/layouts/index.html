@@ -12,7 +12,7 @@
 
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
         {{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
-        
+
         {{ range $paginator.Pages }}
         {{- partial "item.html" . }}
         {{ end }}

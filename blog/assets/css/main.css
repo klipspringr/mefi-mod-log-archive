@@ -141,24 +141,28 @@ table.archive-widget a {
 /* Paginator */
 ul.pagination {
   list-style: none;
-  background-color: var(--darkcl);
+  background-color: #eee;
   padding: 0.5em 1em;
   display: flex;
+  justify-content: center;
   gap: 0.5em;
   font-weight: bold;
-  color: var(--hicl);
 }
 
 ul.pagination a {
-  color: #fff;
   padding: 0 0.2em;
 }
 
 ul.pagination li.disabled a,
 ul.pagination li.active a {
-  color: var(--hicl);
+  color: #999;
   cursor: default;
   border: none;
+}
+
+ul.pagination li.disabled a:hover,
+ul.pagination li.active a:hover {
+  background: none;
 }
 
 /* Common */
@@ -168,7 +172,9 @@ table.archive-widget a {
   font-weight: bold;
 }
 
-.count {
+/* Counters */
+.page-counter,
+.total-counter {
   color: #666;
   font-size: 0.9em;
 }

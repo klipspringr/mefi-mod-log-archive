@@ -2,7 +2,7 @@
 <h1>{{ .Type | title }}</h1>
 
 {{ $postCount := where .Site.RegularPages "Section" "posts" | len }}
-<p class="count"><strong>{{ $postCount | lang.FormatNumber 0 }}</strong> total mod actions</p>
+<p class="total-counter"><strong>{{ $postCount | lang.FormatNumber 0 }}</strong> total mod actions</p>
 
 <ul class="terms terms-{{ .Type }}">
     {{ range $key, $value := .Data.Terms.ByCount }}
