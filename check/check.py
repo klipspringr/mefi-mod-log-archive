@@ -64,6 +64,10 @@ def fetch_mod_actions():
 
     print(f"Found {len(actions)} mod actions")
 
+    # a post can be deleted with one reason, restored, then deleted again
+    # reverse the array, so the newer deletion overwrites the older one
+    actions.reverse()
+
     for action in actions:
         byline = action.find("div", {"class": "postbyline"}).contents
 
