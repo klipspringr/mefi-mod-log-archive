@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import hashlib
+import os
 import re
 from pathlib import Path
 from curl_cffi import requests
@@ -29,12 +30,15 @@ hash = "{hash}"
 """
 
 
-def fetch_mod_actions():
-    HTML_BASEDIR.mkdir(exist_ok=True)
-
+def fetch(url: str, interface: str | None, impersonate="chrome") -> str | None:
     try:
-        # curl_cffi appeases the Cloudflare gods. for now
-        html = requests.get(MOD_LOG_URL, impersonate="chrome").text
+        print(
+            f"Fetch {url} on {interface if interface else 'any interface'} as {impersonate}",
+        )
+
+        # use curl_cffi to appease the Cloudflare gods, for now
+        response = requests.get(url, interface=interface, impersonate=impersonate)
+        return response.text
     except (ConnectionError, HTTPError) as x:
         # fail silently on any ConnectionError, and on HTTPError if code indicates Cloudflare can't reach origin
         # https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
@@ -53,8 +57,10 @@ def fetch_mod_actions():
         print(x)
         print("Failing silently")
 
-        return
+        return None
 
+
+def get_actions(html: str) -> list[bs4.element.Tag]:
     soup = bs4.BeautifulSoup(html, "lxml")
 
     actions = soup.find_all("div", {"class": "copy comment"})
@@ -68,65 +74,82 @@ def fetch_mod_actions():
     # reverse the array, so the newer deletion overwrites the older one
     actions.reverse()
 
-    for action in actions:
-        byline = action.find("div", {"class": "postbyline"}).contents
+    return actions
 
-        mod = byline[1].text
-        url = byline[3]["href"]
-        timestamp = dateparser.parse(
-            f"{byline[2]} {byline[3].text}",
-            settings={
-                "TIMEZONE": "America/Los_Angeles",  # Mefi server is Pacific Time
-                "RETURN_AS_TIMEZONE_AWARE": True,
-                # mod log timestamps don't include year, so we need to specify that dateparser should assume ambiguous dates are from last year
-                "PREFER_DATES_FROM": "past",
-            },
-        ).isoformat()
 
-        hash = hashlib.md5(str(url).encode()).hexdigest()
+def process_action(action: bs4.element.Tag):
+    byline = action.find("div", {"class": "postbyline"}).contents
 
-        site = re.search(r"^//(\w+)\.", url).group(1).lower()
-        site = "mefi" if site == "www" else site
+    mod = byline[1].text
+    url = byline[3]["href"]
+    timestamp = dateparser.parse(
+        f"{byline[2]} {byline[3].text}",
+        settings={
+            "TIMEZONE": "America/Los_Angeles",  # Mefi server is Pacific Time
+            "RETURN_AS_TIMEZONE_AWARE": True,
+            # mod log timestamps don't include year, so we need to specify that dateparser should assume ambiguous dates are from last year
+            "PREFER_DATES_FROM": "past",
+        },
+    ).isoformat()
 
-        byline_start = byline[0].strip().lower()
-        if byline_start.startswith("deleted"):
-            kind = "Deleted post"
-            post_title = action.find("a").text.strip().replace('"', '\\"')
-            title = f"Deleted {site} post '{post_title}'"
-        elif byline_start.startswith("mod comment"):
-            kind = "Mod note"
-            post_title = byline[5].text.strip().replace('"', '\\"')
-            title = f"Mod note on '{post_title}'"
-        else:
-            raise ValueError(f'Unexpected action "{byline_start}"')
+    hash = hashlib.md5(str(url).encode()).hexdigest()
 
-        # split() to work around unclosed tags
-        text = action.decode_contents().strip().split('<div class="copy comment">')[0]
+    site = re.search(r"^//(\w+)\.", url).group(1).lower()
+    site = "mefi" if site == "www" else site
 
-        # remove Cloudflare email protection links, as they contain a hash which changes on every check
-        # note ? for non-greediness
-        text = re.sub(
-            '<a href="/cdn-cgi/l/email-protection#.+?">.+?</a>',
-            "[email protected]",
-            text,
-        )
+    byline_start = byline[0].strip().lower()
+    if byline_start.startswith("deleted"):
+        kind = "Deleted post"
+        post_title = action.find("a").text.strip().replace('"', '\\"')
+        title = f"Deleted {site} post '{post_title}'"
+    elif byline_start.startswith("mod comment"):
+        kind = "Mod note"
+        post_title = byline[5].text.strip().replace('"', '\\"')
+        title = f"Mod note on '{post_title}'"
+    else:
+        raise ValueError(f'Unexpected action "{byline_start}"')
 
-        post = HTML_TEMPLATE.format(
-            title=title,
-            timestamp=timestamp,
-            site=site,
-            mod=mod,
-            kind=kind,
-            hash=hash,
-            url=url,
-            text=text,
-        )
+    # split() to work around unclosed tags
+    text = action.decode_contents().strip().split('<div class="copy comment">')[0]
 
-        filename = f"{site}-{hash}.html"
-        with open(HTML_BASEDIR / filename, "w") as f:
-            f.write(post)
-            print(f"Wrote {filename} ({title})")
+    # remove Cloudflare email protection links, as they contain a hash which changes on every check
+    # note ? for non-greediness
+    text = re.sub(
+        '<a href="/cdn-cgi/l/email-protection#.+?">.+?</a>',
+        "[email protected]",
+        text,
+    )
+
+    post = HTML_TEMPLATE.format(
+        title=title,
+        timestamp=timestamp,
+        site=site,
+        mod=mod,
+        kind=kind,
+        hash=hash,
+        url=url,
+        text=text,
+    )
+
+    filename = f"{site}-{hash}.html"
+    with open(HTML_BASEDIR / filename, "w") as f:
+        f.write(post)
+        print(f"Wrote {filename} ({title})")
+
+
+def main():
+    HTML_BASEDIR.mkdir(exist_ok=True)
+
+    interface = os.getenv("INTERFACE", None)
+
+    html = fetch(MOD_LOG_URL, interface=interface)
+
+    if html is None:
+        return
+
+    for action in get_actions(html):
+        process_action(action)
 
 
 if __name__ == "__main__":
-    fetch_mod_actions()
+    main()
