@@ -38,4 +38,6 @@ jobs:
           if ! git diff-index --quiet HEAD; then
             git commit -m "Recent mod actions updated"
             git push
+          else
+            echo "No changes to blog posts"
           fi
