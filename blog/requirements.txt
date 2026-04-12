@@ -1,2 +1,0 @@
-pagefind==1.4.0
-pagefind_bin_extended==1.4.0

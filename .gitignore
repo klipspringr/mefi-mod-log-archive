@@ -1,5 +1,7 @@
 .env
+.venv
 .hugo_build.lock
 .log
+logs
 public
 published-content.csv
