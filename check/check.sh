@@ -10,11 +10,10 @@ fi
 
 git pull --quiet
 
-uv run ./check.py
+$HOME/.local/bin/uv run ./check.py
 
 if [ -n "$(git status --porcelain ../blog/content/posts)" ]; then
     git add ../blog/content/posts
-    
     git -c "user.name=mefi-activity-automated" -c "user.email=mefi-activity-automated" commit -m "Recent mod actions updated"
     git push --quiet
 else
