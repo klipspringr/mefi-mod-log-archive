@@ -23,7 +23,6 @@ mods = ["{mod}"]
 
 [params]
 url = "{url}"
-hash = "{hash}"
 +++
 
 {text}
@@ -126,7 +125,6 @@ def process_action(action: bs4.element.Tag):
         site=site,
         mod=mod,
         kind=kind,
-        hash=hash,
         url=url,
         text=text,
     )

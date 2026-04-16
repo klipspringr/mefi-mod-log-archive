@@ -25,12 +25,14 @@
         </a>
     </div>
     {{ end }}
+    {{ with .File }}
     <div>
         {{ $historyLink := printf
-        `https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/%s-%s.html?author=mefi-activity-automated`
-        (index .Params.subsites 0) .Params.hash }}
+        `https://github.com/klipspringr/mefi-mod-log-archive/commits/main/blog/content/posts/%s?author=mefi-activity-automated`
+        .LogicalName }}
         🕙 <a href="{{ $historyLink }}" target="_blank" title="History on GitHub">
             History
         </a>
     </div>
+    {{ end }}
 </div>
