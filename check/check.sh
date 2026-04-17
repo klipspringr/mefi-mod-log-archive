@@ -7,22 +7,27 @@ flock -n 9 || { echo "Previous run in progress, exiting" >&2; exit 1; }
 cd "$(dirname "$0")"
 
 if [ -n "$(git status --porcelain)" ]; then
-    echo "Working tree dirty, exiting" >&2
     git status >&2
+    echo "Working tree dirty, exiting" >&2
     exit 1
 fi
 
-# we don't want to do anything other than fast-forward
-git fetch
-git pull --ff-only --no-progress
+# fast-forward only
+# git outputs progress stuff to stderr, so redirect to stdout and check exit code
+if ! git pull --ff-only 2>&1; then
+    echo "Failed to pull, exiting" >&2
+    exit 1
+fi
 
 "$HOME/.local/bin/uv" run ./check.py
 
-status_output=$(git status --porcelain ../blog/content/posts)
-if [ -n "$status_output" ]; then
+if [ -n "$(git status --porcelain ../blog/content/posts)" ]; then
     git add ../blog/content/posts
     git -c "user.name=mefi-activity-automated" -c "user.email=mefi-activity-automated" commit -m "Recent mod actions updated"
-    git push
+    if ! git push 2>&1; then
+        echo "Failed to push, exiting" >&2
+        exit 1
+    fi
 else
     echo "No changes to blog posts"
 fi

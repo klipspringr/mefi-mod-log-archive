@@ -2,9 +2,10 @@
 import hashlib
 import os
 import re
+from datetime import datetime, time, timezone
 from pathlib import Path
 from curl_cffi import requests
-from curl_cffi.requests.exceptions import HTTPError
+from curl_cffi.requests.exceptions import HTTPError, RequestException
 
 import bs4
 import dateparser
@@ -38,25 +39,19 @@ def fetch(url: str, interface: str | None, impersonate="chrome") -> str | None:
         # use curl_cffi to appease the Cloudflare gods, for now
         response = requests.get(url, interface=interface, impersonate=impersonate)
         return response.text
-    except (ConnectionError, HTTPError) as x:
-        # fail silently on any ConnectionError, and on HTTPError if code indicates Cloudflare can't reach origin
-        # https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/
-        if isinstance(x, HTTPError) and x.code not in (
-            520,
-            521,
-            522,
-            523,
-            524,
-            525,
-            526,
-            530,
-        ):
-            raise
+    except RequestException as x:
+        now_utc = datetime.now(timezone.utc).time()
+        in_silent_window = time(10, 14) <= now_utc <= time(10, 26)
 
-        print(x)
-        print("Failing silently")
+        # fail silently:
+        # - around 10:15 UTC, when the site is flaky every day
+        # - on Cloudflare errors which are (probably) transient
+        if in_silent_window or (isinstance(x, HTTPError) and 520 <= x.code <= 530):
+            print(x)
+            print("Failing silently")
+            return None
 
-        return None
+        raise
 
 
 def get_actions(html: str) -> list[bs4.element.Tag]:
