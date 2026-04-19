@@ -6,7 +6,7 @@
         Made by <a href="https://www.metafilter.com/user/304523">Klipspringer</a>
         &middot; Report issues on <a href="https://github.com/klipspringr/mefi-mod-log-archive">GitHub</a>
         &middot; Not an official MetaFilter product
-        &middot; Timestamps are Pacific Time unless otherwise stated.
+        &middot; Timestamps are Pacific Time.
     </p>
     <p>
         We check for new mod actions every few minutes &middot; Mod actions from Aug 5&ndash;8 2025 are
@@ -14,6 +14,7 @@
         deletions with the same post number.
     </p>
     <p>
-        Built {{ now.UTC | dateFormat "Jan 2 2006 3:04PM MST" }}.
+        Built {{ now | time.In "America/Los_Angeles" | dateFormat "Jan 2 2006 3:04PM" }} Pacific Time
+        &middot {{ now | dateFormat "Jan 2 3:04PM" }} UTC.
     </p>
 </footer>

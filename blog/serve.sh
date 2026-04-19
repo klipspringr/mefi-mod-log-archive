@@ -1,7 +1,7 @@
 #!/bin/bash
 cd "$(dirname "$0")" || exit
-mkdir -p assets/data
 hugo mod verify
+mkdir -p assets/data
 hugo list published > assets/data/published-content.csv
 rm -rf public
 hugo build

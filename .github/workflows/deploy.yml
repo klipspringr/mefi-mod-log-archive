@@ -32,21 +32,21 @@ jobs:
         with:
           hugo-version: "0.155.3"
 
-      - name: Hugo
+      - name: Prepare Hugo
         working-directory: ./blog
         run: |
-          mkdir -p assets/data
           hugo mod verify
+          mkdir -p assets/data
           hugo list published > assets/data/published-content.csv
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Build with Hugo
+        working-directory: ./blog
+        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Build Pagefind index
         run: npx -y pagefind@v1.5.0 --site blog/public
 
-      - uses: actions/upload-pages-artifact@v5.0.0
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ./blog/public
 
