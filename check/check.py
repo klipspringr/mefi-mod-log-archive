@@ -1,16 +1,20 @@
 #!/usr/bin/python
+import enum
 import hashlib
-import os
 import re
+import sys
 from datetime import datetime, time, timezone
 from pathlib import Path
-from curl_cffi import requests
-from curl_cffi.requests.exceptions import HTTPError, RequestException
+from urllib.parse import urlsplit
 
 import bs4
 import dateparser
+from curl_cffi import requests
+from curl_cffi.requests.exceptions import HTTPError, RequestException
 
 MOD_LOG_URL = "https://www.metafilter.com/recent-mod-actions.cfm"
+
+MEFI_TIMEZONE = "America/Los_Angeles"
 
 HTML_BASEDIR = Path(__file__).parent.parent / "blog" / "content" / "posts"
 
@@ -26,18 +30,22 @@ mods = ["{mod}"]
 url = "{url}"
 +++
 
-{text}
+{content}
 """
 
 
-def fetch(url: str, interface: str | None, impersonate="chrome") -> str | None:
+class Kind(enum.Enum):
+    DELETED_POST = "Deleted post"
+    MOD_NOTE = "Mod note"
+
+
+def fetch(url: str) -> str:
     try:
-        print(
-            f"Fetch {url} on {interface if interface else 'any interface'} as {impersonate}",
-        )
+        print(f"Fetch {url}")
 
         # use curl_cffi to appease the Cloudflare gods, for now
-        response = requests.get(url, interface=interface, impersonate=impersonate)
+        response = requests.get(url, impersonate="chrome")
+        response.raise_for_status()
         return response.text
     except RequestException as x:
         now_utc = datetime.now(timezone.utc).time()
@@ -49,96 +57,178 @@ def fetch(url: str, interface: str | None, impersonate="chrome") -> str | None:
         if in_silent_window or (isinstance(x, HTTPError) and 520 <= x.code <= 530):
             print(x)
             print("Failing silently")
-            return None
+            sys.exit(0)
 
         raise
 
 
-def get_actions(html: str) -> list[bs4.element.Tag]:
+def get_actions(html: str) -> list[bs4.Tag]:
     soup = bs4.BeautifulSoup(html, "lxml")
 
     actions = soup.find_all("div", {"class": "copy comment"})
+
+    # a post can be deleted with one reason, restored, then deleted again
+    # reverse the array, so the newer deletion overwrites the older one
+    actions.reverse()
 
     if len(actions) == 0:
         raise ValueError("No mod actions found, is something wrong?")
 
     print(f"Found {len(actions)} mod actions")
 
-    # a post can be deleted with one reason, restored, then deleted again
-    # reverse the array, so the newer deletion overwrites the older one
-    actions.reverse()
-
     return actions
 
 
-def process_action(action: bs4.element.Tag):
-    byline = action.find("div", {"class": "postbyline"}).contents
+def get_kind(byline: list[bs4.PageElement]) -> Kind:
+    first_node_text = byline[0].get_text().strip().lower()
+    if first_node_text.startswith("deleted"):
+        return Kind.DELETED_POST
+    elif first_node_text.startswith("mod comment"):
+        return Kind.MOD_NOTE
+    else:
+        raise ValueError(f'Couldn\'t parse byline "{first_node_text}"')
 
-    mod = byline[1].text
-    url = byline[3]["href"]
+
+def get_mod(byline: list[bs4.PageElement]) -> str:
+    mod = byline[1].get_text()
+    if not mod:
+        raise ValueError("No mod found in byline")
+    return mod
+
+
+def get_url(byline: list[bs4.PageElement]) -> str:
+    url = str(byline[3]["href"])
+    if not url:
+        raise ValueError("No URL found in byline")
+    return url
+
+
+def get_timestamp(byline: list[bs4.PageElement]) -> datetime:
+    timestamp_str = f"{byline[2].get_text()} {byline[3].get_text()}"
+
     timestamp = dateparser.parse(
-        f"{byline[2]} {byline[3].text}",
+        timestamp_str,
         settings={
-            "TIMEZONE": "America/Los_Angeles",  # Mefi server is Pacific Time
+            "TIMEZONE": MEFI_TIMEZONE,
             "RETURN_AS_TIMEZONE_AWARE": True,
-            # mod log timestamps don't include year, so we need to specify that dateparser should assume ambiguous dates are from last year
+            # mod log timestamps don't include year, so we need to tell dateparser that dates are in the past
             "PREFER_DATES_FROM": "past",
         },
-    ).isoformat()
+    )
 
-    hash = hashlib.md5(str(url).encode()).hexdigest()
+    if not timestamp:
+        raise ValueError(f'Couldn\'t parse timestamp from "{timestamp_str}"')
 
-    site = re.search(r"^//(\w+)\.", url).group(1).lower()
-    site = "mefi" if site == "www" else site
+    return timestamp
 
-    byline_start = byline[0].strip().lower()
-    if byline_start.startswith("deleted"):
-        kind = "Deleted post"
-        post_title = action.find("a").text.strip().replace('"', '\\"')
-        title = f"Deleted {site} post '{post_title}'"
-    elif byline_start.startswith("mod comment"):
-        kind = "Mod note"
-        post_title = byline[5].text.strip().replace('"', '\\"')
-        title = f"Mod note on '{post_title}'"
-    else:
-        raise ValueError(f'Unexpected action "{byline_start}"')
 
-    # split() to work around unclosed tags
-    text = action.decode_contents().strip().split('<div class="copy comment">')[0]
+def get_content(action: bs4.Tag) -> str:
+    # the byline is no longer needed, but we keep it for consistency with existing posts
+    content = action.decode_contents().strip()
+
+    # work around unclosed tags
+    content = content.split('<div class="copy comment">', 1)[0].strip()
 
     # remove Cloudflare email protection links, as they contain a hash which changes on every check
     # note ? for non-greediness
-    text = re.sub(
+    content = re.sub(
         '<a href="/cdn-cgi/l/email-protection#.+?">.+?</a>',
         "[email protected]",
-        text,
+        content,
     )
+
+    return content
+
+
+def get_title_deletion(action: bs4.Tag, site: str) -> str:
+    post_title = action.find("a").get_text().strip().replace('"', '\\"')
+    return f"Deleted {site} post '{post_title}'"
+
+
+def get_title_note(byline: list[bs4.PageElement]) -> str:
+    post_title = byline[5].get_text().strip().replace('"', '\\"')
+    return f"Mod note on '{post_title}'"
+
+
+def remove_byline(content: str):
+    return content.split('<div class="smallcopy postbyline">')[0].strip()
+
+
+# key post deletions on site, post id, and hash of content
+# the same post can be deleted multiple times, potentially by the same mod within the same minute
+def get_key_deletion(site: str, path: str, content: str) -> str:
+    post_id = path.split("/")[1]
+    if not post_id.isnumeric():
+        raise ValueError(f'Couldn\'t get post id from "{path}"')
+
+    content_without_byline = remove_byline(content)
+
+    hash = hashlib.md5(content_without_byline.encode()).hexdigest()[:8]
+
+    return f"{site}-post-{post_id}-{hash}"
+
+
+# key mod notes on site and comment id
+def get_key_note(site: str, comment_id: str) -> str:
+    if not comment_id.isnumeric():
+        raise ValueError(f'Invalid comment ID "{comment_id}"')
+
+    return f"{site}-note-{comment_id}"
+
+
+def write_post(key: str, post: str):
+    with open(HTML_BASEDIR / f"{key}.html", "w") as f:
+        f.write(post)
+
+
+def process_action(action: bs4.Tag):
+    byline_tag = action.find("div", {"class": "postbyline"})
+    if not byline_tag:
+        raise ValueError("No byline found in action")
+
+    byline = byline_tag.contents
+
+    kind = get_kind(byline)
+
+    mod = get_mod(byline)
+
+    url = get_url(byline)
+    url_parsed = urlsplit(url)
+    site = url_parsed.netloc.split(".")[0]
+    if site == "www" or site == "metafilter":
+        site = "mefi"
+
+    timestamp = get_timestamp(byline)
+
+    content = get_content(action)
+
+    if kind == Kind.DELETED_POST:
+        title = get_title_deletion(action, site)
+        key = get_key_deletion(site, url_parsed.path, content)
+    elif kind == Kind.MOD_NOTE:
+        title = get_title_note(byline)
+        key = get_key_note(site, url_parsed.fragment)
+    else:
+        raise ValueError(f"Unexpected kind {kind}")
 
     post = HTML_TEMPLATE.format(
         title=title,
-        timestamp=timestamp,
+        timestamp=timestamp.isoformat(),
         site=site,
         mod=mod,
-        kind=kind,
+        kind=kind.value,
         url=url,
-        text=text,
+        content=content,
     )
 
-    filename = f"{site}-{hash}.html"
-    with open(HTML_BASEDIR / filename, "w") as f:
-        f.write(post)
-        print(f"Wrote {filename} ({title})")
+    print(f"{key}: {title}")
+    write_post(key, post)
 
 
 def main():
     HTML_BASEDIR.mkdir(exist_ok=True)
 
-    interface = os.getenv("INTERFACE", None)
-
-    html = fetch(MOD_LOG_URL, interface=interface)
-
-    if html is None:
-        return
+    html = fetch(MOD_LOG_URL)
 
     for action in get_actions(html):
         process_action(action)
