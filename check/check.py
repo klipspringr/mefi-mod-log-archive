@@ -1,4 +1,4 @@
-#!/usr/bin/python
+import copy
 import enum
 import hashlib
 import re
@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 
 import bs4
 import dateparser
+from bs4.element import PageElement, Tag
 from curl_cffi import requests
 from curl_cffi.requests.exceptions import HTTPError, RequestException
 
@@ -62,7 +63,7 @@ def fetch(url: str) -> str:
         raise
 
 
-def get_actions(html: str) -> list[bs4.Tag]:
+def get_actions(html: str) -> list[Tag]:
     soup = bs4.BeautifulSoup(html, "lxml")
 
     actions = soup.find_all("div", {"class": "copy comment"})
@@ -79,31 +80,34 @@ def get_actions(html: str) -> list[bs4.Tag]:
     return actions
 
 
-def get_kind(byline: list[bs4.PageElement]) -> Kind:
+def get_kind(byline: list[PageElement]) -> Kind:
     first_node_text = byline[0].get_text().strip().lower()
     if first_node_text.startswith("deleted"):
         return Kind.DELETED_POST
     elif first_node_text.startswith("mod comment"):
         return Kind.MOD_NOTE
     else:
-        raise ValueError(f'Couldn\'t parse byline "{first_node_text}"')
+        raise ValueError(f'Unexpected action kind "{first_node_text}"')
 
 
-def get_mod(byline: list[bs4.PageElement]) -> str:
+def get_mod(byline: list[PageElement]) -> str:
     mod = byline[1].get_text()
     if not mod:
         raise ValueError("No mod found in byline")
     return mod
 
 
-def get_url(byline: list[bs4.PageElement]) -> str:
-    url = str(byline[3]["href"])
+def get_url(byline: list[PageElement]) -> str:
+    link = byline[3]
+    if not isinstance(link, Tag) or link.name != "a":
+        raise ValueError("No link found in byline")
+    url = str(link["href"])
     if not url:
         raise ValueError("No URL found in byline")
     return url
 
 
-def get_timestamp(byline: list[bs4.PageElement]) -> datetime:
+def get_timestamp(byline: list[PageElement]) -> datetime:
     timestamp_str = f"{byline[2].get_text()} {byline[3].get_text()}"
 
     timestamp = dateparser.parse(
@@ -117,12 +121,12 @@ def get_timestamp(byline: list[bs4.PageElement]) -> datetime:
     )
 
     if not timestamp:
-        raise ValueError(f'Couldn\'t parse timestamp from "{timestamp_str}"')
+        raise ValueError(f'Invalid timestamp "{timestamp_str}"')
 
     return timestamp
 
 
-def get_content(action: bs4.Tag) -> str:
+def get_content(action: Tag) -> str:
     # the byline is no longer needed, but we keep it for consistency with existing posts
     content = action.decode_contents().strip()
 
@@ -140,38 +144,42 @@ def get_content(action: bs4.Tag) -> str:
     return content
 
 
-def get_title_deletion(action: bs4.Tag, site: str) -> str:
-    post_title = action.find("a").get_text().strip().replace('"', '\\"')
+def get_title_deletion(site: str, action: Tag) -> str:
+    post_link = action.find("a")
+    if not post_link:
+        raise ValueError("No post link found in action")
+
+    post_title = post_link.get_text().strip().replace('"', '\\"')
+
     return f"Deleted {site} post '{post_title}'"
 
 
-def get_title_note(byline: list[bs4.PageElement]) -> str:
+def get_title_note(byline: list[PageElement]) -> str:
     post_title = byline[5].get_text().strip().replace('"', '\\"')
     return f"Mod note on '{post_title}'"
 
 
-def remove_byline(content: str):
-    return content.split('<div class="smallcopy postbyline">')[0].strip()
-
-
 # key post deletions on site, post id, and hash of content
-# the same post can be deleted multiple times, potentially by the same mod within the same minute
-def get_key_deletion(site: str, path: str, content: str) -> str:
+# the same post can be deleted multiple times, potentially within the same minute by the same mod
+# save a new post if the deletion reason or title is changed (consistent with mod log behaviour)
+def get_key_deletion(site: str, path: str, action: Tag) -> str:
     post_id = path.split("/")[1]
     if not post_id.isnumeric():
-        raise ValueError(f'Couldn\'t get post id from "{path}"')
+        raise ValueError(f'Invalid path "{path}"')
 
-    content_without_byline = remove_byline(content)
+    action_copy = copy.copy(action)
+    action_copy.find("div", {"class": "smallcopy postbyline"}).decompose()
+    content_without_byline = get_content(action_copy)
 
-    hash = hashlib.md5(content_without_byline.encode()).hexdigest()[:8]
+    content_hash = hashlib.md5(content_without_byline.encode()).hexdigest()[:8]
 
-    return f"{site}-post-{post_id}-{hash}"
+    return f"{site}-post-{post_id}-{content_hash}"
 
 
 # key mod notes on site and comment id
 def get_key_note(site: str, comment_id: str) -> str:
     if not comment_id.isnumeric():
-        raise ValueError(f'Invalid comment ID "{comment_id}"')
+        raise ValueError(f'Invalid comment id "{comment_id}"')
 
     return f"{site}-note-{comment_id}"
 
@@ -181,7 +189,7 @@ def write_post(key: str, post: str):
         f.write(post)
 
 
-def process_action(action: bs4.Tag):
+def process_action(action: Tag):
     byline_tag = action.find("div", {"class": "postbyline"})
     if not byline_tag:
         raise ValueError("No byline found in action")
@@ -203,13 +211,13 @@ def process_action(action: bs4.Tag):
     content = get_content(action)
 
     if kind == Kind.DELETED_POST:
-        title = get_title_deletion(action, site)
-        key = get_key_deletion(site, url_parsed.path, content)
+        title = get_title_deletion(site, action)
+        key = get_key_deletion(site, url_parsed.path, action)
     elif kind == Kind.MOD_NOTE:
         title = get_title_note(byline)
         key = get_key_note(site, url_parsed.fragment)
     else:
-        raise ValueError(f"Unexpected kind {kind}")
+        raise ValueError(f'Unexpected kind "{kind}"')
 
     post = HTML_TEMPLATE.format(
         title=title,
