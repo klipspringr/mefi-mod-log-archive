@@ -35,12 +35,26 @@ jobs:
         with:
           hugo-version: "0.155.3"
 
-      - uses: actions/cache@v4
+      - name: Cache Hugo modules
+        uses: actions/cache@v4
         with:
           path: ${{ env.HUGO_CACHEDIR }}
           key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-hugomod-
+
+      - name: Cache Pagefind
+        id: cache-pagefind
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/pagefind
+          key: ${{ runner.os }}-pagefind-${{ env.PAGEFIND_VERSION }}
+
+      - name: Install Pagefind
+        if: steps.cache-pagefind.outputs.cache-hit != 'true'
+        run: |
+          curl -sSL https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
+            | sudo tar -xz -C /usr/local/bin
 
       - name: Build with Hugo
         working-directory: blog
@@ -50,21 +64,9 @@ jobs:
           hugo list published > assets/data/published-content.csv
           hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      - name: Restore Pagefind binary
-        id: cache-pagefind
-        uses: actions/cache@v4
-        with:
-          path: /usr/local/bin/pagefind
-          key: ${{ runner.os }}-pagefind-${{ env.PAGEFIND_VERSION }}
-
-      - name: Download Pagefind
-        if: steps.cache-pagefind.outputs.cache-hit != 'true'
-        run: |
-          curl -sSL https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
-            | sudo tar -xz -C /usr/local/bin
-
       - name: Build Pagefind index
-        run: pagefind --site blog/public --glob "posts/**/*.html"
+        working-directory: blog
+        run: pagefind --site public --glob "posts/**/*.html"
 
       - uses: actions/upload-pages-artifact@v5
         with:
