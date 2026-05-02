@@ -44,7 +44,7 @@ jobs:
         run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Build Pagefind index
-        run: npx -y pagefind@v1.5.0 --site blog/public --glob "posts/**/*.html"
+        run: npx -y pagefind@v1.5.2 --site blog/public --glob "posts/**/*.html"
 
       - uses: actions/upload-pages-artifact@v5
         with:
