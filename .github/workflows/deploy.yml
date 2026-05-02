@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /usr/local/bin/pagefind
-          key: pagefind-${{ env.PAGEFIND_VERSION }}-${{ runner.os }}
+          key: ${{ runner.os }}-pagefind-${{ env.PAGEFIND_VERSION }}
 
       - name: Download Pagefind
         if: steps.cache-pagefind.outputs.cache-hit != 'true'
