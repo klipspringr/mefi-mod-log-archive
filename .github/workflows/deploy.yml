@@ -22,6 +22,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HUGO_CACHEDIR: /tmp/hugo_cache
+      PAGEFIND_VERSION: v1.5.2
     steps:
       - uses: actions/checkout@v6
 
@@ -32,23 +35,40 @@ jobs:
         with:
           hugo-version: "0.155.3"
 
-      - name: Prepare Hugo
-        working-directory: ./blog
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.HUGO_CACHEDIR }}
+          key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-hugomod-
+
+      - name: Build with Hugo
+        working-directory: blog
         run: |
           hugo mod verify
           mkdir -p assets/data
           hugo list published > assets/data/published-content.csv
+          hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      - name: Build with Hugo
-        working-directory: ./blog
-        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+      - name: Restore Pagefind binary
+        id: cache-pagefind
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/pagefind
+          key: pagefind-${{ env.PAGEFIND_VERSION }}-${{ runner.os }}
+
+      - name: Download Pagefind
+        if: steps.cache-pagefind.outputs.cache-hit != 'true'
+        run: |
+          curl -sSL https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
+            | sudo tar -xz -C /usr/local/bin
 
       - name: Build Pagefind index
-        run: npx -y pagefind@v1.5.2 --site blog/public --glob "posts/**/*.html"
+        run: pagefind --site blog/public --glob "posts/**/*.html"
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: ./blog/public
+          path: blog/public
 
   deploy:
     environment:
