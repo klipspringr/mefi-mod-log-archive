@@ -3,9 +3,10 @@ import enum
 import hashlib
 import re
 import sys
-from datetime import datetime, time, timezone
+from datetime import datetime, time
 from pathlib import Path
 from urllib.parse import urlsplit
+from zoneinfo import ZoneInfo
 
 import bs4
 import dateparser
@@ -49,13 +50,15 @@ def fetch(url: str) -> str:
         response.raise_for_status()
         return response.text
     except RequestException as x:
-        now_utc = datetime.now(timezone.utc).time()
-        in_silent_window = time(10, 14) <= now_utc <= time(10, 26)
-
-        # fail silently:
-        # - around 10:15 UTC, when the site is flaky every day
+        # exit silently:
+        # - around 3:15 PST/PDT, when the site is flaky every day
         # - on Cloudflare errors which are (probably) transient
-        if in_silent_window or (isinstance(x, HTTPError) and 520 <= x.code <= 530):
+
+        server_time = datetime.now(ZoneInfo(MEFI_TIMEZONE)).time()
+        in_silent_window = time(3, 14) <= server_time <= time(3, 26)
+        is_cloudflare_error = isinstance(x, HTTPError) and 520 <= x.code <= 530
+
+        if in_silent_window or is_cloudflare_error:
             print(x)
             print("Failing silently")
             sys.exit(0)
@@ -66,10 +69,9 @@ def fetch(url: str) -> str:
 def get_actions(html: str) -> list[Tag]:
     soup = bs4.BeautifulSoup(html, "lxml")
 
-    actions = soup.find_all("div", {"class": "copy comment"})
+    actions = soup.select("div.comment.copy")
 
-    # a post can be deleted with one reason, restored, then deleted again
-    # reverse the array, so the newer deletion overwrites the older one
+    # process actions in reverse chronological order
     actions.reverse()
 
     if len(actions) == 0:
@@ -126,8 +128,9 @@ def get_timestamp(byline: list[PageElement]) -> datetime:
     return timestamp
 
 
+# get the content of the mod action as a string, with some cleanup
+# keep the action byline. its now removed in the Hugo HTML template, but (a) it's useful in RSS and (b) useful for consistency/posterity
 def get_content(action: Tag) -> str:
-    # the byline is no longer needed, but we keep it for consistency with existing posts
     content = action.decode_contents().strip()
 
     # work around unclosed tags
@@ -144,7 +147,7 @@ def get_content(action: Tag) -> str:
     return content
 
 
-def get_title_deletion(site: str, action: Tag) -> str:
+def get_deletion_title(site: str, action: Tag) -> str:
     post_link = action.find("a")
     if not post_link:
         raise ValueError("No post link found in action")
@@ -154,21 +157,24 @@ def get_title_deletion(site: str, action: Tag) -> str:
     return f"Deleted {site} post '{post_title}'"
 
 
-def get_title_note(byline: list[PageElement]) -> str:
+def get_note_title(byline: list[PageElement]) -> str:
     post_title = byline[5].get_text().strip().replace('"', '\\"')
     return f"Mod note on '{post_title}'"
 
 
 # key post deletions on site, post id, and hash of content
-# the same post can be deleted multiple times, potentially within the same minute by the same mod
-# save a new post if the deletion reason or title is changed (consistent with mod log behaviour)
-def get_key_deletion(site: str, path: str, action: Tag) -> str:
+# the same post can be deleted multiple times, potentially with the same timestamp (minute precision) and same mod
+# we want a separate blog post if the deletion reason or post title is changed
+def get_deletion_key(site: str, path: str, action: Tag) -> str:
     post_id = path.split("/")[1]
     if not post_id.isnumeric():
         raise ValueError(f'Invalid path "{path}"')
 
     action_copy = copy.copy(action)
-    action_copy.find("div", {"class": "smallcopy postbyline"}).decompose()
+    byline = action_copy.find("div", class_="postbyline")
+    if not byline:
+        raise ValueError("No byline found in deleted post action")
+    byline.decompose()
     content_without_byline = get_content(action_copy)
 
     content_hash = hashlib.md5(content_without_byline.encode()).hexdigest()[:8]
@@ -177,7 +183,7 @@ def get_key_deletion(site: str, path: str, action: Tag) -> str:
 
 
 # key mod notes on site and comment id
-def get_key_note(site: str, comment_id: str) -> str:
+def get_note_key(site: str, comment_id: str) -> str:
     if not comment_id.isnumeric():
         raise ValueError(f'Invalid comment id "{comment_id}"')
 
@@ -190,7 +196,7 @@ def write_post(key: str, post: str):
 
 
 def process_action(action: Tag):
-    byline_tag = action.find("div", {"class": "postbyline"})
+    byline_tag = action.find("div", class_="postbyline")
     if not byline_tag:
         raise ValueError("No byline found in action")
 
@@ -211,11 +217,11 @@ def process_action(action: Tag):
     content = get_content(action)
 
     if kind == Kind.DELETED_POST:
-        title = get_title_deletion(site, action)
-        key = get_key_deletion(site, url_parsed.path, action)
+        title = get_deletion_title(site, action)
+        key = get_deletion_key(site, url_parsed.path, action)
     elif kind == Kind.MOD_NOTE:
-        title = get_title_note(byline)
-        key = get_key_note(site, url_parsed.fragment)
+        title = get_note_title(byline)
+        key = get_note_key(site, url_parsed.fragment)
     else:
         raise ValueError(f'Unexpected kind "{kind}"')
 
