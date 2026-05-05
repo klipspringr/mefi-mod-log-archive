@@ -32,10 +32,18 @@ jobs:
       - uses: actions/configure-pages@v6
         id: pages
 
+      - name: Cache Hugo
+        id: cache-hugo
+        uses: actions/cache@v5
+        with:
+          path: /usr/local/bin/hugo
+          key: ${{ runner.os }}-hugo-${{ env.HUGO_VERSION }}
+
       - name: Install Hugo
+        if: steps.cache-hugo.outputs.cache-hit != 'true'
         run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.deb
-          sudo dpkg -i ${{ runner.temp }}/hugo.deb
+          curl -sSLf "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz" \
+          | sudo tar -C /usr/local/bin -xzf - hugo
 
       - name: Cache Hugo modules
         uses: actions/cache@v5
@@ -55,7 +63,7 @@ jobs:
       - name: Install Pagefind
         if: steps.cache-pagefind.outputs.cache-hit != 'true'
         run: |
-          curl -sSL https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
+          curl -sSLf https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
             | sudo tar -xz -C /usr/local/bin
 
       - name: Build with Hugo
@@ -75,11 +83,11 @@ jobs:
           path: blog/public
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
