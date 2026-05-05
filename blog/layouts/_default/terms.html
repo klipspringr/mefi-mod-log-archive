@@ -1,6 +1,5 @@
 {{ define "main" }}
 <h1>{{ .Type | title }}</h1>
-
 {{ $postCount := where .Site.RegularPages "Section" "posts" | len }}
 <p class="total-counter"><strong>{{ $postCount | lang.FormatNumber 0 }}</strong> total mod actions</p>
 
@@ -12,4 +11,5 @@
     </li>
     {{ end }}
 </ul>
+
 {{ end }}

@@ -10,13 +10,12 @@
 
 {{ $pag := .Paginate $p }}
 
-<div class="archive-widget-wrapper">
-    {{ partial "archive/widget.html" }}
+{{- partialCached "archive/widget_wrapped.html" . -}}
+
+<div class="archive-title">
+    <h1>{{- .Title -}}</h1>
+    {{- partial "page_counter.html" $pag -}}
 </div>
-
-<h1>{{- .Title -}}</h1>
-
-{{ partial "page_counter.html" $pag }}
 
 {{- range $pag.Pages }}
 {{ partial "item.html" . }}
@@ -24,8 +23,6 @@
 
 {{- partial "pagination.html" . }}
 
-<div class="archive-widget-wrapper">
-    {{ partial "archive/widget.html" }}
-</div>
+{{- partialCached "archive/widget_wrapped.html" . -}}
 
 {{ end }}

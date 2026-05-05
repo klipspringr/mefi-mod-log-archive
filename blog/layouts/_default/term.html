@@ -2,15 +2,16 @@
 
 {{- $pag := .Paginate .Data.Pages }}
 
-<h1>
-    {{ if isset .Data "Term" }}
-    Tagged "{{ .Data.Term }}"
-    {{ else }}
-    All pages
-    {{ end }}
-</h1>
-
-{{ partial "page_counter.html" $pag }}
+<div class="list-title">
+    <h1>
+        {{ if isset .Data "Term" }}
+        Tagged "{{ .Data.Term }}"
+        {{ else }}
+        All pages
+        {{ end }}
+    </h1>
+    {{ partial "page_counter.html" $pag }}
+</div>
 
 {{- range $pag.Pages -}}
 {{ partial "item.html" . }}

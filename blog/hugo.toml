@@ -19,9 +19,9 @@ limit = 100
 path = 'github.com/jmooring/hugo-module-archive'
 
 [params.modules.archive]
-section = '/posts/'   # The section for which to build archive pages.
-prefix = '/archive/'  # The URL prefix for archive pages.
-enableDaily = false   # Whether to generate daily archives.
+section = '/posts/'  # The section for which to build archive pages.
+prefix = '/archive/' # The URL prefix for archive pages.
+enableDaily = false  # Whether to generate daily archives.
 
 [params.modules.archive.formats]
 year = "2006"

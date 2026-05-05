@@ -4,9 +4,11 @@
 
 <body>
     <div class="content">
-        {{- partial "header.html" . -}}
-        {{- block "main" . }}{{- end }}
-        {{- partial "footer.html" . -}}
+        {{- partialCached "header.html" . -}}
+        {{- block "main" . }}{{- end -}}
+        <hr class="divider" />
+        {{- partial "feed_link.html" . -}}
+        {{- partialCached "footer.html" . -}}
     </div>
 </body>
 

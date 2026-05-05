@@ -1,5 +1,6 @@
 :root {
   --bgcl: #daf0f7;
+  --bggraycl: #eee;
   --darkcl: #155484;
   --hicl: #8dc3d7;
 }
@@ -61,7 +62,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: 1.2em;
+  font-size: 120%;
   margin: 0;
   color: var(--darkcl);
 }
@@ -89,12 +90,16 @@ header {
   gap: 0.5em 0;
 }
 
+header a {
+  font-weight: bold;
+}
+
 header a.site-title {
-  font-size: 1.5em;
+  font-size: 150%;
 }
 
 header div.subhead {
-  font-size: 0.85em;
+  font-size: 85%;
   color: #999;
   margin-top: 0.5em;
 }
@@ -112,12 +117,29 @@ header nav a {
 }
 
 /* Footer */
-footer {
-  border-top: 0.4em dotted var(--darkcl);
-  padding: 1em 0;
+hr.divider {
   margin-top: 2em;
-  font-size: 0.9em;
-  color: #666;
+  border: none;
+  border-top: 0.4em dotted var(--bgcl);
+}
+
+footer {
+  font-size: 85%;
+  color: #999;
+}
+
+footer a {
+  font-weight: bold;
+}
+
+div.feed-link {
+  background-color: var(--bgcl);
+  margin: 1em 0;
+  padding: 0.5em 1em;
+}
+
+div.feed-link a {
+  font-weight: bold;
 }
 
 /* Archive widget */
@@ -131,17 +153,18 @@ table.archive-widget {
   margin: 1em 0;
   width: 100%;
   color: var(--hicl);
-  font-size: 0.8em;
+  font-size: 80%;
 }
 
 table.archive-widget a {
   color: #fff;
+  font-weight: bold;
 }
 
 /* Paginator */
 ul.pagination {
   list-style: none;
-  background-color: #eee;
+  background-color: var(--bggraycl);
   padding: 0.5em 1em;
   display: flex;
   justify-content: center;
@@ -165,18 +188,17 @@ ul.pagination li.active a:hover {
   background: none;
 }
 
-/* Common */
-header a,
-footer a,
-table.archive-widget a {
-  font-weight: bold;
+/* Titles and counters */
+.archive-title,
+.list-title {
+  background-color: var(--bggraycl);
+  padding: 0.5em 1em;
 }
 
-/* Counters */
 .page-counter,
 .total-counter {
   color: #666;
-  font-size: 0.9em;
+  font-size: 90%;
 }
 
 /* Posts */
@@ -197,7 +219,7 @@ div.byline {
   margin-top: 0.5em;
   padding: 0.35em 0.5em;
   gap: 0.2em 0.5em;
-  font-size: 0.9em;
+  font-size: 90%;
   cursor: default;
 }
 
