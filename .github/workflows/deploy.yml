@@ -9,11 +9,8 @@ on:
 
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: "deploy"
@@ -37,7 +34,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /usr/local/bin/hugo
-          key: ${{ runner.os }}-hugo-${{ env.HUGO_VERSION }}
+          key: ${{ runner.os }}-${{ runner.arch }}-hugo-${{ env.HUGO_VERSION }}
 
       - name: Install Hugo
         if: steps.cache-hugo.outputs.cache-hit != 'true'
@@ -49,16 +46,15 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ${{ env.HUGO_CACHEDIR }}
-          key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-hugomod-
+          key: ${{ runner.os }}-${{ runner.arch }}-hugomod-${{ hashFiles('**/go.sum') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-hugomod-
 
       - name: Cache Pagefind
         id: cache-pagefind
         uses: actions/cache@v5
         with:
           path: /usr/local/bin/pagefind
-          key: ${{ runner.os }}-pagefind-${{ env.PAGEFIND_VERSION }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pagefind-${{ env.PAGEFIND_VERSION }}
 
       - name: Install Pagefind
         if: steps.cache-pagefind.outputs.cache-hit != 'true'
@@ -85,6 +81,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
