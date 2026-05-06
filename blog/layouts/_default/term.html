@@ -4,10 +4,14 @@
 
 <div class="list-title">
     <h1>
-        {{ if isset .Data "Term" }}
-        Tagged "{{ .Data.Term }}"
+        {{ if eq .Section "mods" }}
+        Mod actions by {{ .Data.Term }}
+        {{ else if eq .Section "subsites" }}
+        Mod actions on {{ .Data.Term | title }}
+        {{ else if eq .Section "kinds" }}
+        {{ .Data.Term | pluralize }}
         {{ else }}
-        All pages
+        Tagged {{ .Data.Term }}
         {{ end }}
     </h1>
     {{ partial "page_counter.html" $pag }}
