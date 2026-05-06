@@ -1,4 +1,10 @@
 +++
 [build]
 render = "never"
+
+# disable RSS feeds for archive pages
+# https://github.com/jmooring/hugo-module-archive/discussions/3#discussioncomment-13118489
+# this is here not in hugo.toml, because Even Better TOML was complaining about syntax errors
+[cascade]
+outputs = ["HTML"]
 +++
