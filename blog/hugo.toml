@@ -9,6 +9,9 @@ kind = 'kinds'
 mod = 'mods'
 subsite = 'subsites'
 
+[outputs]
+taxonomy = ['html']
+
 [pagination]
 pagerSize = 100
 
