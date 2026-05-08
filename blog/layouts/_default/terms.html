@@ -1,7 +1,11 @@
 {{ define "main" }}
-<h1>{{ .Type | title }}</h1>
-{{ $postCount := where .Site.RegularPages "Section" "posts" | len }}
-<p class="total-counter"><strong>{{ $postCount | lang.FormatNumber 0 }}</strong> total mod actions</p>
+<h1>
+    {{ if eq .Type "subsites" }}
+    Sites
+    {{ else }}
+    {{ .Type | title}}
+    {{ end }}
+</h1>
 
 <ul class="terms terms-{{ .Type }}">
     {{ range $key, $value := .Data.Terms.ByCount }}
@@ -12,4 +16,9 @@
     {{ end }}
 </ul>
 
+{{ $postCount := where .Site.RegularPages "Section" "posts" | len }}
+<p class="total-counter">
+    <strong>{{ $postCount | lang.FormatNumber 0 }}</strong> total
+    mod {{ cond (eq $postCount 1) "action" "actions" }}
+</p>
 {{ end }}
