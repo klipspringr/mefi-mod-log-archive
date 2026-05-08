@@ -124,8 +124,9 @@ hr.divider {
 }
 
 footer {
-  font-size: 85%;
+  margin-top: 1em;
   color: #999;
+  font-size: 85%;
 }
 
 footer a {
@@ -135,7 +136,7 @@ footer a {
 div.feed-link {
   background-color: var(--bgcl);
   margin: 1em 0;
-  padding: 0.5em 1em;
+  padding: 0.5em;
 }
 
 div.feed-link a {
