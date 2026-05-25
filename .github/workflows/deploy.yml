@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: "deploy"
@@ -23,41 +25,33 @@ jobs:
       HUGO_CACHEDIR: /tmp/hugo_cache
       HUGO_VERSION: 0.161.1
       PAGEFIND_VERSION: v1.5.2
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
 
       - uses: actions/configure-pages@v6
         id: pages
 
-      - name: Cache Hugo
-        id: cache-hugo
+      - name: Cache Hugo, Hugo modules, Pagefind
+        id: cache
         uses: actions/cache@v5
         with:
-          path: /usr/local/bin/hugo
-          key: ${{ runner.os }}-${{ runner.arch }}-hugo-${{ env.HUGO_VERSION }}
+          path: |
+            /usr/local/bin/hugo
+            ${{ env.HUGO_CACHEDIR }}
+            /usr/local/bin/pagefind
+          key: hugo-${{ env.HUGO_VERSION }}-hugomod-${{ hashFiles('**/go.sum') }}-pagefind-${{ env.PAGEFIND_VERSION }}
 
       - name: Install Hugo
-        if: steps.cache-hugo.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           curl -sSLf "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz" \
           | sudo tar -C /usr/local/bin -xzf - hugo
 
-      - name: Cache Hugo modules
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.HUGO_CACHEDIR }}
-          key: ${{ runner.os }}-${{ runner.arch }}-hugomod-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-${{ runner.arch }}-hugomod-
-
-      - name: Cache Pagefind
-        id: cache-pagefind
-        uses: actions/cache@v5
-        with:
-          path: /usr/local/bin/pagefind
-          key: ${{ runner.os }}-${{ runner.arch }}-pagefind-${{ env.PAGEFIND_VERSION }}
-
       - name: Install Pagefind
-        if: steps.cache-pagefind.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           curl -sSLf https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
             | sudo tar -xz -C /usr/local/bin
@@ -78,16 +72,6 @@ jobs:
         with:
           path: blog/public
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
