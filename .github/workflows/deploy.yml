@@ -24,7 +24,7 @@ jobs:
     env:
       HUGO_CACHEDIR: /tmp/hugo_cache
       HUGO_VERSION: 0.161.1
-      PAGEFIND_VERSION: v1.5.2
+      PAGEFIND_VERSION: 1.5.2
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -53,7 +53,7 @@ jobs:
       - name: Install Pagefind
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          curl -sSLf https://github.com/Pagefind/pagefind/releases/download/${{ env.PAGEFIND_VERSION }}/pagefind-${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
+          curl -sSLf https://github.com/Pagefind/pagefind/releases/download/v${{ env.PAGEFIND_VERSION }}/pagefind-v${{ env.PAGEFIND_VERSION }}-x86_64-unknown-linux-musl.tar.gz \
             | sudo tar -xz -C /usr/local/bin
 
       - name: Build with Hugo
