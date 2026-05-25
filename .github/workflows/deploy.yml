@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and deploy to GitHub Pages
 
 on:
   push:
@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     env:
       HUGO_CACHEDIR: /tmp/hugo_cache
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/configure-pages@v6
         id: pages
 
-      - name: Cache Hugo, Hugo modules, Pagefind
+      - name: Cache dependencies
         id: cache
         uses: actions/cache@v5
         with:
