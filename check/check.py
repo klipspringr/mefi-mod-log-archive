@@ -56,7 +56,11 @@ def fetch(url: str) -> str:
 
         server_time = datetime.now(ZoneInfo(MEFI_TIMEZONE)).time()
         in_silent_window = time(3, 14) <= server_time <= time(3, 26)
-        is_cloudflare_error = isinstance(x, HTTPError) and 520 <= x.code <= 530
+        is_cloudflare_error = (
+            isinstance(x, HTTPError)
+            and getattr(x, "response", None) is not None
+            and 520 <= x.response.status_code <= 530
+        )
 
         if in_silent_window or is_cloudflare_error:
             print(x)
