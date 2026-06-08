@@ -19,7 +19,7 @@ if ! git pull --ff-only 2>&1; then
     exit 1
 fi
 
-"$HOME/.local/bin/uv" run ./check.py
+"$HOME/.local/bin/uv" run --env-file="$HOME/.secrets/mefi" ./check.py
 
 if [ -n "$(git status --porcelain ../blog/content/posts)" ]; then
     git add ../blog/content/posts

@@ -1,6 +1,7 @@
 import copy
 import enum
 import hashlib
+import os
 import re
 import sys
 from datetime import datetime, time
@@ -46,7 +47,15 @@ def fetch(url: str) -> str:
         print(f"Fetch {url}")
 
         # use curl_cffi to appease the Cloudflare gods, for now
-        response = requests.get(url, impersonate="chrome")
+        response = requests.get(
+            url,
+            impersonate="chrome",
+            cookies={
+                "USER_ID": os.environ.get("MEFI_USER_ID", ""),
+                "USER_NAME": os.environ.get("MEFI_USER_NAME", ""),
+                "USER_TOKEN": os.environ.get("MEFI_USER_TOKEN", ""),
+            },
+        )
         response.raise_for_status()
         return response.text
     except RequestException as x:
