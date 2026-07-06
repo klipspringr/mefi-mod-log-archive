@@ -75,3 +75,15 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          reporting_interval: 10000
+          error_count: 15
+
+      - name: Retry Pages deploy after transient failure
+        if: steps.deployment.outcome == 'failure'
+        id: deployment_retry
+        uses: actions/deploy-pages@v5
+        with:
+          reporting_interval: 10000
+          error_count: 15
