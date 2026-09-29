@@ -142,7 +142,7 @@ def get_timestamp(byline: list[PageElement]) -> datetime:
 
 
 # get the content of the mod action as a string, with some cleanup
-# keep the action byline. its now removed in the Hugo HTML template, but (a) it's useful in RSS and (b) useful for consistency/posterity
+# keep the action byline. it's now removed in the Hugo HTML template, but (a) it's useful in RSS and (b) useful for consistency/posterity
 def get_content(action: Tag) -> str:
     content = action.decode_contents().strip()
 

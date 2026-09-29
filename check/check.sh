@@ -2,7 +2,10 @@
 set -euo pipefail
 
 exec 9>"$HOME/.mefi-mod-log-archive.lock"
-flock -n 9 || { echo "Previous run in progress, exiting" >&2; exit 1; }
+flock -n 9 || {
+    echo "Previous run in progress, exiting" >&2
+    exit 1
+}
 
 cd "$(dirname "$0")"
 
@@ -12,12 +15,12 @@ if [ -n "$(git status --porcelain)" ]; then
     exit 1
 fi
 
-# fast-forward only
-# git outputs progress stuff to stderr, so redirect to stdout and check exit code
-if ! git pull --ff-only 2>&1; then
-    echo "Failed to pull, exiting" >&2
-    exit 1
-fi
+# # fast-forward only
+# # git outputs progress stuff to stderr, so redirect to stdout and check exit code
+# if ! git pull --ff-only 2>&1; then
+#     echo "Failed to pull, exiting" >&2
+#     exit 1
+# fi
 
 "$HOME/.local/bin/uv" run --env-file="$HOME/.secrets/mefi" ./check.py
 
